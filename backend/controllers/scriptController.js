@@ -22,7 +22,8 @@ function zipDirectory(sourceDir, outputZipPath) {
 
 export const getZipFile = (req, res, next) => {
   try {
-    const { project } = req.body;
+    const { licenseToken, project } = req.body;
+
     if (!project) {
       return res
         .status(400)

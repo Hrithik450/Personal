@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import scriptRoutes from "./routes/scriptRoutes.js";
+import webhookRoutes from "./routes/webhookRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,6 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/scripts", scriptRoutes);
+app.use("/webhook", webhookRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running...");
