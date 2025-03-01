@@ -1,14 +1,23 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, "./config.env") });
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD1Er-DVOu-4kyDDdu3tCP6aGzfFVFEYAk",
-  authDomain: "npm-packages-7a3fd.firebaseapp.com",
-  projectId: "npm-packages-7a3fd",
-  storageBucket: "npm-packages-7a3fd.firebasestorage.app",
-  messagingSenderId: "887444771068",
-  appId: "1:887444771068:web:e5eba3a399edfe6fb30779",
-  measurementId: "G-FEMJRGZZN7",
+  apiKey: process.env.apiKey,
+  databaseURL: process.env.databaseURL,
+  authDomain: process.env.authDomain,
+  projectId: process.env.projectId,
+  storageBucket: process.env.storageBucket,
+  messagingSenderId: process.env.messagingSenderId,
+  appId: process.env.appId,
+  measurementId: process.env.measurementId,
 };
 
 const firebaseApp = initializeApp(firebaseConfig);

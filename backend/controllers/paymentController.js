@@ -38,7 +38,7 @@ function getExpireTime(inputDate) {
 
 function generateLicense(uuid, NoOfTimesRegistered) {
   const hash = crypto
-    .createHmac("sha256", process.env.SECRET + NoOfTimesRegistered)
+    .createHmac("sha256", process.env.SECRET + String(NoOfTimesRegistered))
     .update(uuid)
     .digest("hex")
     .slice(0, 8);
@@ -48,6 +48,7 @@ function generateLicense(uuid, NoOfTimesRegistered) {
 
 export const checkPayment = async (req, res) => {
   const uuid = req.headers["x-license-key"];
+
   if (!uuid) {
     return res
       .status(400)
@@ -94,7 +95,6 @@ export const registerDevice = async (req, res) => {
 
     return res.status(200).json({ success: true });
   } catch (error) {
-    console.error("Error registering device:", error);
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
