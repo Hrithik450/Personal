@@ -24,7 +24,10 @@ touch pages/Auth/login.jsx pages/Home/home.jsx pages/NotFound/notFound.jsx
 touch routes/{adminRoute.jsx,appRoute.jsx,index.jsx,privateRoute.jsx}
 touch store/slices/auth/{authSlice.jsx,authThunks.jsx}
 touch store/store.jsx
+
+cd ..
 touch .env
+cd src
 
 echo '@import "tailwindcss";' > index.css
 echo "body {background-color: rgba(0, 0, 0, 0.7); color: white;}" > App.css

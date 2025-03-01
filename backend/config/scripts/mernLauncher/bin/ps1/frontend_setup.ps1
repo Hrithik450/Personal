@@ -8,7 +8,8 @@ New-Item -ItemType Directory -Path "src/hooks","src/pages/Auth","src/pages/Home"
 New-Item -ItemType File -Path "src/pages/Auth/login.jsx","src/pages/Home/home.jsx","src/pages/NotFound/notFound.jsx" | Out-Null
 New-Item -ItemType File -Path "src/store/slices/auth/authSlice.jsx","src/store/slices/auth/authThunks.jsx" | Out-Null
 New-Item -ItemType File -Path "src/routes/adminRoute.jsx","src/routes/appRoute.jsx","src/routes/index.jsx","src/routes/privateRoute.jsx" | Out-Null
-New-Item -ItemType File -Path "src/store/store.jsx","src/.env" | Out-Null
+New-Item -ItemType File -Path "src/store/store.jsx" | Out-Null
+New-Item -ItemType File -Path ".env" | Out-Null
 
 @'
 import { defineConfig } from "vite";
