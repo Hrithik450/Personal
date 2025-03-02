@@ -28,11 +28,14 @@ export const createOrder = createAsyncThunk(
 
 export const capturePayment = createAsyncThunk(
   "order/capture",
-  async ({ formData, orderData, orderID, paymentID, uuid }, thunkAPI) => {
+  async (
+    { formData, orderData, orderID, paymentID, uuid, packageName },
+    thunkAPI
+  ) => {
     try {
       const response = await axios.post(
         `${API_URL}/api/v1/payment/capturePayment`,
-        { formData, orderData, orderID, paymentID, uuid },
+        { formData, orderData, orderID, paymentID, uuid, packageName },
         {
           withCredentials: true,
         }

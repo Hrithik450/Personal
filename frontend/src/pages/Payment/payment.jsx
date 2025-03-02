@@ -13,7 +13,7 @@ import PaymentSuccess from "../../components/payment/success";
 const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
 
 const PaymentPage = () => {
-  const { uuid, packageName } = useParams();
+  const { packageName, uuid } = useParams();
   const dispatch = useDispatch();
 
   const [isPaymentStart, setisPaymentStart] = useState(false);
