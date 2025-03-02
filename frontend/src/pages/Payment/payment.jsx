@@ -10,8 +10,10 @@ import {
 import DotSpinner from "../../components/common/dotSpinner";
 import PaymentSuccess from "../../components/payment/success";
 
+const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
+
 const PaymentPage = () => {
-  const { uuid } = useParams();
+  const { uuid, packageName } = useParams();
   const dispatch = useDispatch();
 
   const [isPaymentStart, setisPaymentStart] = useState(false);
@@ -81,7 +83,7 @@ const PaymentPage = () => {
             name: "codeEase",
             description: "Paying to codeEase",
             image:
-              "https://res.cloudinary.com/duozomapm/image/upload/v1737799706/AnuvBanner2_lp8bqd.jpg",
+              "https://res.cloudinary.com/duozomapm/image/upload/v1740900611/codeEaseLogo_tt6wjb.png",
             order_id: res.orderID,
             theme: {
               color: "#F4C430",
@@ -97,6 +99,7 @@ const PaymentPage = () => {
                   orderID: res.orderID,
                   paymentID: response.razorpay_payment_id,
                   uuid,
+                  packageName,
                 })
               ).unwrap();
 
@@ -203,10 +206,23 @@ const PaymentPage = () => {
           <p className="text-sm text-center text-gray-500 mt-4">
             By proceeding you agree to our{" "}
             <a
-              href="https://hruthik.anox.store/terms-and-conditions"
+              href={`${FRONTEND_URL}/terms-and-conditions/${packageName}/${uuid}`}
               className="text-blue-600 cursor-pointer"
             >
-              Terms, Privacy & Refund Policy
+              Terms,{" "}
+            </a>
+            <a
+              href={`${FRONTEND_URL}/privacy-policy/${packageName}/${uuid}`}
+              className="text-blue-600 cursor-pointer"
+            >
+              Privacy{" "}
+            </a>
+            <a
+              href={`${FRONTEND_URL}/refund-policy/${packageName}/${uuid}`}
+              className="text-blue-600 cursor-pointer"
+            >
+              {" "}
+              & Refund Policy
             </a>
           </p>
         </div>

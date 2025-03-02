@@ -1,14 +1,4 @@
-import express from "express";
-import {
-  doc,
-  setDoc,
-  getDoc,
-  updateDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-} from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { fileURLToPath } from "url";
 import path from "path";
 import crypto from "crypto";
@@ -16,6 +6,8 @@ import { DateTime } from "luxon";
 import Razorpay from "razorpay";
 import db from "../config/db.js";
 import dotenv from "dotenv";
+import axios from "axios";
+import ejs from "ejs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -132,7 +124,9 @@ export const createNewOrder = async (req, res, next) => {
 };
 
 export const capturePayment = async (req, res, next) => {
-  const { formData, orderData, orderID, paymentID, uuid } = req.body;
+  const { formData, orderData, orderID, paymentID, uuid, packageName } =
+    req.body;
+
   try {
     if (!orderID) {
       return res
@@ -172,33 +166,38 @@ export const capturePayment = async (req, res, next) => {
       ...paymentData,
     });
 
-    const orderDetails = {
+    const packageDetails = {
       orderNumber: orderID,
       customerName: formData.name,
-      AmountPaid: `₹${orderData.totalAmount}`,
       validTill: paymentData.expiresAt,
       paidAt: paymentData.paidAt,
+      items: [
+        {
+          name: packageName,
+          duration: "12 Months",
+          price: `₹${orderData.totalAmount}`,
+        },
+      ],
     };
 
-    // const CLIENT_URL = process.env.FRONTEND_URL;
-    // const templatePath = path.resolve("views", "success.ejs");
-    // const htmlcontent = await ejs.renderFile(templatePath, {
-    //   orderDetails,
-    //   CLIENT_URL,
-    // });
+    const PACKAGE_URL = `https://www.npmjs.com/package/${packageName}`;
+    const templatePath = path.resolve("views", "success.ejs");
+    const htmlcontent = await ejs.renderFile(templatePath, {
+      packageDetails,
+      PACKAGE_URL,
+    });
 
-    res.status(200).json({
+    await axios.post(process.env.EMAIL_API_URL, {
+      email: formData.email,
+      subject: `Payment successful! You've successfully purchased the ${packageName} package.`,
+      message: htmlcontent,
+    });
+
+    return res.status(200).json({
       success: true,
       message: "Payment successful!",
     });
-
-    // return await axios.post(process.env.EMAIL_API_URL, {
-    //   email: formData.email,
-    //   subject: `Payment successful! You've successfully purchased the MERN Launcher package.`,
-    //   message: htmlcontent,
-    // });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Server error, try again later!" });

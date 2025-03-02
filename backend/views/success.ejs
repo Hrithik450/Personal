@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Successfull</title>
+    <style>
+      body {
+        font-family: "Times New Roman", Times, serif;
+        color: #333;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 550px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      .header {
+        text-align: center;
+      }
+
+      .header img {
+        border: 1px solid white;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+      }
+
+      .body {
+        padding: 1rem;
+        text-align: left;
+      }
+
+      .desc {
+        margin: 1rem 0;
+        font-size: 1.1rem;
+      }
+
+      h3 {
+        margin: 1rem 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #f4f4f4;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #0088ff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+
+      .button:hover {
+        background-color: #0077dd;
+      }
+
+      .footer {
+        margin-top: 20px;
+        font-size: 14px;
+        text-align: left;
+        color: #555;
+      }
+
+      .link {
+        color: #0073e6;
+        text-decoration: none;
+      }
+
+      .link:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 479px) {
+        .body {
+          padding: 1rem 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <img
+          src="https://res.cloudinary.com/duozomapm/image/upload/v1740901356/codease_banner_1_hhgfvo.png"
+          alt="CodeEase"
+        />
+      </div>
+
+      <div class="body">
+        <h2>Package Activated Successfully</h2>
+        <h3>Dear <%= packageDetails.customerName %>,</h3>
+        <p class="desc">
+          Congratulations! 🎉 Your CodeEase Package has been successfully
+          activated. Now you have full access to our premium coding assistance,
+          debugging tools, and premium features.
+        </p>
+
+        <h3>Package Details</h3>
+        <ul>
+          <li>
+            <strong>Package ID:</strong> <%= packageDetails.orderNumber %>
+          </li>
+          <li>
+            <strong>Activation Date:</strong> <%= packageDetails.paidAt %>
+          </li>
+          <li>
+            <strong>Expiration Date</strong> <%= packageDetails.validTill %>
+          </li>
+        </ul>
+
+        <h3>Your Purchased Package</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Package Name</th>
+              <th>Duration</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% packageDetails.items.forEach(function(item, index) { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= item.name %></td>
+              <td><%= item.duration %></td>
+              <td><%= item.price %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+
+        <a href="<%= PACKAGE_URL %>" class="button"> Configure Your Package</a>
+
+        <p>
+          Thank you for choosing CodeEase to enhance your coding experience!
+        </p>
+        <p>Best Regards,</p>
+        <p>Team CodeEase</p>
+        <p>
+          Need help?
+          <a href="https://hruthik.api.anox.store/support" class="link"
+            >Contact our support team.</a
+          >
+        </p>
+      </div>
+
+      <div class="footer">
+        &copy; 2025-2026 All rights reserved | Designed and Developed by
+        <a href="https://hruthik.onrender.com">Hruthik M</a>
+      </div>
+    </div>
+  </body>
+</html>
