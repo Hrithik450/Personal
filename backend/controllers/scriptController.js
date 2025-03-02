@@ -2,6 +2,15 @@ import path from "path";
 import { fileURLToPath } from "url";
 import AdmZip from "adm-zip";
 import fs from "fs";
+import db from "../config/db.js";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,9 +29,29 @@ function zipDirectory(sourceDir, outputZipPath) {
   return outputZipPath;
 }
 
-export const getZipFile = (req, res, next) => {
+export const getZipFile = async (req, res, next) => {
   try {
     const { licenseToken, project } = req.body;
+
+    const docRef = collection(db, "mern-launcher");
+    const q = query(docRef, where("license", "==", licenseToken));
+    const snapShot = await getDocs(q);
+
+    if (snapShot.empty) {
+      return res.status(400).json({
+        success: false,
+        message: "Register your device!!",
+      });
+    }
+
+    const licenseData = snapShot.docs[0].data();
+
+    if (licenseData.freeTrial !== "active" && licenseData.status !== "active") {
+      return res.status(400).json({
+        success: false,
+        message: "Please Purchase a license to continue",
+      });
+    }
 
     if (!project) {
       return res

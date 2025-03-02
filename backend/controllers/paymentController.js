@@ -9,8 +9,6 @@ import {
   where,
   getDocs,
 } from "firebase/firestore";
-import AdmZip from "adm-zip";
-import fs from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 import crypto from "crypto";
@@ -88,12 +86,17 @@ export const registerDevice = async (req, res) => {
       license: license,
       NoOfTimesRegistered: NoOfTimesRegistered,
       status: "pending",
+      freeTrial: existingDoc.exists() ? "inactive" : "active",
       createdAt: getLiveTime(DateTime.now().setZone("Asia/Kolkata")),
     };
 
     await setDoc(docRef, data, { merge: true });
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({
+      success: true,
+      freeTrial: data.freeTrial,
+      license,
+    });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Server error" });
   }
@@ -202,24 +205,25 @@ export const capturePayment = async (req, res, next) => {
   }
 };
 
-// function zipFiles(outputZipPath, files) {
-//   const zip = new AdmZip();
+export const checkTrial = async (req, res) => {
+  const { uuid } = req.body;
 
-//   files.forEach((file) => {
-//     const filePath = path.resolve(__dirname, "..", "config", file);
+  const docRef = doc(db, "mern-launcher", uuid);
+  const snapShot = await getDoc(docRef);
 
-//     if (fs.existsSync(filePath)) {
-//       zip.addLocalFile(filePath);
-//     } else {
-//       console.log(`❌ File not found: ${file}`);
-//     }
-//   });
+  if (!snapShot.exists()) {
+    return res.status(400).json({ success: false, message: "bad request" });
+  }
 
-//   zip.writeZip(outputZipPath);
-// }
+  const licenseData = snapShot.data();
 
-// const packageDir = path.resolve(__dirname, "..", "config");
-// const outputZipPath = path.join(packageDir, "credentials.zip");
-// const filesToZip = ["db.js", "credentials.js"];
+  if (licenseData.freeTrial === "active") {
+    await updateDoc(docRef, {
+      freeTrial: "inactive",
+    });
+  }
 
-// zipFiles(outputZipPath, filesToZip);
+  return res.status(200).json({
+    success: true,
+  });
+};
