@@ -187,15 +187,15 @@ export const capturePayment = async (req, res, next) => {
       PACKAGE_URL,
     });
 
-    await axios.post(process.env.EMAIL_API_URL, {
+    res.status(200).json({
+      success: true,
+      message: "Payment successful!",
+    });
+
+    return await axios.post(process.env.EMAIL_API_URL, {
       email: formData.email,
       subject: `Payment successful! You've successfully purchased the ${packageName} package.`,
       message: htmlcontent,
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "Payment successful!",
     });
   } catch (error) {
     return res
