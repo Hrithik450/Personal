@@ -38,6 +38,7 @@ function generateLicense(uuid, NoOfTimesRegistered) {
 
 export const checkPayment = async (req, res) => {
   const uuid = req.headers["x-license-key"];
+  const { packageName } = req.body;
 
   if (!uuid) {
     return res
@@ -45,7 +46,7 @@ export const checkPayment = async (req, res) => {
       .json({ success: false, message: "provide valid details" });
   }
 
-  const docRef = doc(db, "mern-launcher", uuid);
+  const docRef = doc(db, packageName, uuid);
   const existingDoc = await getDoc(docRef);
 
   if (!existingDoc.exists()) {
@@ -60,11 +61,16 @@ export const checkPayment = async (req, res) => {
 export const registerDevice = async (req, res) => {
   try {
     const uuid = req.headers["x-license-key"];
-    if (!uuid) {
-      return res.status(400).json({ success: false, message: "Missing UUID" });
+    const { packageName } = req.body;
+
+    if (!uuid || !packageName) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields: UUID or package name",
+      });
     }
 
-    const docRef = doc(db, "mern-launcher", uuid);
+    const docRef = doc(db, packageName, uuid);
     const existingDoc = await getDoc(docRef);
 
     let NoOfTimesRegistered = 1;
@@ -134,7 +140,7 @@ export const capturePayment = async (req, res, next) => {
         .json({ success: false, message: "Server error, try again later!" });
     }
 
-    const docRef = doc(db, "mern-launcher", uuid);
+    const docRef = doc(db, packageName, uuid);
     const existingDoc = await getDoc(docRef);
 
     if (!existingDoc.exists()) {
@@ -205,9 +211,9 @@ export const capturePayment = async (req, res, next) => {
 };
 
 export const checkTrial = async (req, res) => {
-  const { uuid } = req.body;
+  const { uuid, packageName } = req.body;
 
-  const docRef = doc(db, "mern-launcher", uuid);
+  const docRef = doc(db, packageName, uuid);
   const snapShot = await getDoc(docRef);
 
   if (!snapShot.exists()) {

@@ -31,9 +31,9 @@ function zipDirectory(sourceDir, outputZipPath) {
 
 export const getZipFile = async (req, res, next) => {
   try {
-    const { licenseToken, project } = req.body;
+    const { licenseToken, project, packageName } = req.body;
 
-    const docRef = collection(db, "mern-launcher");
+    const docRef = collection(db, packageName);
     const q = query(docRef, where("license", "==", licenseToken));
     const snapShot = await getDocs(q);
 

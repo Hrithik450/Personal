@@ -12,7 +12,7 @@ import { sendEmail } from "../utils/sendMail.js";
 
 const router = express.Router();
 
-router.get("/check-payment", checkPayment);
+router.post("/check-payment", checkPayment);
 router.post("/register", registerDevice);
 router.post("/createOrder", createNewOrder);
 router.post("/capturePayment", capturePayment);
