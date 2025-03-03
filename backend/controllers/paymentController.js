@@ -226,3 +226,69 @@ export const checkTrial = async (req, res) => {
     success: true,
   });
 };
+
+export const SendCode = async (req, res) => {
+  const { uuid, email } = req.body;
+
+  const docRef = doc(db, "mern-launcher", uuid);
+  const snapShot = await getDoc(docRef);
+
+  if (!snapShot.exists()) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Server error, try again!!" });
+  }
+
+  const verificationCode = Math.floor(100000 + Math.random() * 900000);
+
+  await updateDoc(docRef, {
+    verificationCode,
+  });
+
+  const templatePath = path.resolve("views", "verifyEmail.ejs");
+  const htmlcontent = await ejs.renderFile(templatePath, {
+    verificationToken: verificationCode,
+  });
+
+  await axios.post(process.env.EMAIL_API_URL, {
+    email: email,
+    subject: "Your verification code for codeEase",
+    message: htmlcontent,
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Verification code sent to your email!",
+  });
+};
+
+export const verifyEmail = async (req, res) => {
+  const { uuid, code } = req.body;
+
+  const Code = Number(code);
+  const docRef = doc(db, "mern-launcher", uuid);
+  const snapShot = await getDoc(docRef);
+
+  if (!snapShot.exists()) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Server error, try again!!" });
+  }
+
+  const verificationCode = snapShot.data().verificationCode;
+
+  if (verificationCode !== Code) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid verification code" });
+  }
+
+  await updateDoc(docRef, {
+    verificationCode: null,
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Email verified successfully!",
+  });
+};

@@ -25,7 +25,7 @@ def send_mail():
         server.login(sender_email, password)
 
         msg = MIMEMultipart()
-        msg['From'] = sender_email
+        msg['From'] = f'Team CodeEase <{sender_email}>'
         msg['To'] = recipient_email
         msg['Subject'] = subject
         msg.attach(MIMEText(message, 'html'))

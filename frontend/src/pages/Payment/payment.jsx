@@ -9,8 +9,8 @@ import {
 } from "../../store/slices/payment/paymentThunks";
 import DotSpinner from "../../components/common/dotSpinner";
 import PaymentSuccess from "../../components/payment/success";
-
-const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
+import { useSearchParams } from "react-router-dom";
+import CryptoJS from "crypto-js";
 
 const PaymentPage = () => {
   const { packageName, uuid } = useParams();
@@ -20,10 +20,20 @@ const PaymentPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
   const [paymentData, setPaymentData] = useState(null);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [formData, setformData] = useState({
-    name: "",
+    name: searchParams.get("name") || "",
     email: "",
   });
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const SECRET_KEY = import.meta.env.VITE_SECRET;
+
+  function decryptEmail(encryptedData) {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
+    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+    return decrypted;
+  }
 
   useEffect(() => {
     const storedPaymentData = sessionStorage.getItem("paymentSuccess");
@@ -33,15 +43,36 @@ const PaymentPage = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const encryptedEmail = searchParams.get("data");
+    if (encryptedEmail) {
+      const decryptedEmail = decryptEmail(decodeURIComponent(encryptedEmail));
+
+      if (decryptedEmail) {
+        setformData((prev) => ({ ...prev, email: decryptedEmail }));
+        setEmailVerified(true);
+      }
+    }
+  }, [searchParams]);
+
   const handleChange = (e) => {
-    setformData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setformData((prev) => ({ ...prev, [name]: value }));
+
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set(name, value);
+    setSearchParams(newSearchParams);
+  };
+
+  const handleGoogleAuth = () => {
+    const url = new URL(window.location.href);
+    const redirectUrl = encodeURIComponent(url.toString());
+    window.location.href = `${BACKEND_URL}/api/v1/auth/google?redirectUrl=${redirectUrl}`;
   };
 
   const handleInitiatePayment = async (e) => {
     e.preventDefault();
+
     const orderData = {
       totalAmount: 149,
       paymentId: "",
@@ -167,62 +198,77 @@ const PaymentPage = () => {
           <label className="block font-semibold text-black">
             Full Name<span className="text-red-500">*</span>
           </label>
+
           <input
-            required
             type="text"
             placeholder="Your Name"
             name="name"
             value={formData.name}
             onChange={handleChange}
+            required
             className="w-full p-2 rounded-lg mt-1 border-2 border-gray-400 focus:border-pink-600 placeholder-gray-500 text-black"
           />
 
           <label className="block font-semibold mt-4 text-black">
             Email Address<span className="text-red-500">*</span>
           </label>
-          <input
-            required
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="example@example.com"
-            className="w-full p-2 rounded-lg mt-1 border-2 border-gray-400 focus:border-pink-600 placeholder-gray-500 text-black"
-          />
-
-          <div className="flex items-center mt-4 text-green-600">
-            <span className="text-2xl">📲</span>
-            <p className="ml-2">Confirmations will be sent over email</p>
+          <div className="flex items-center flex-col">
+            <div className="relative w-full mt-1 border-2 rounded-lg border-gray-400 focus:border-pink-600">
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                placeholder="example@example.com"
+                readOnly
+                required
+                className="w-full p-2 placeholder-gray-500 text-black"
+              />
+              <button
+                type="button"
+                onClick={handleGoogleAuth}
+                className="bg-blue-500 text-white px-2 py-2 absolute right-0 top-0 h-full font-medium text-sm"
+              >
+                Select Email
+              </button>
+            </div>
+            {formData.email && (
+              <p className="text-green-600 font-semibold mt-1 self-end text-xs">
+                Verified
+              </p>
+            )}
           </div>
 
           <button
+            type="submit"
+            disabled={!emailVerified}
             className={`w-full bg-blue-600 text-white py-2 rounded-lg mt-4 text-lg cursor-pointer ${
-              isPaymentStart && "pt-4 pb-4"
-            }`}
+              isPaymentStart ? "pt-4 pb-4" : ""
+            } ${!emailVerified && "opacity-50 cursor-not-allowed"}`}
           >
-            {isPaymentStart ? <DotSpinner color={"white"} /> : "PAY ₹149/ year"}
+            {isPaymentStart ? <DotSpinner color="white" /> : "PAY ₹149/ year"}
           </button>
 
           <p className="text-sm text-center text-gray-500 mt-4">
             By proceeding you agree to our{" "}
             <a
-              href={`${FRONTEND_URL}/terms-and-conditions/${packageName}/${uuid}`}
+              href={`/terms-and-conditions/${packageName}/${uuid}`}
               className="text-blue-600 cursor-pointer"
             >
-              Terms,{" "}
+              Terms
             </a>
+            ,{" "}
             <a
-              href={`${FRONTEND_URL}/privacy-policy/${packageName}/${uuid}`}
+              href={`/privacy-policy/${packageName}/${uuid}`}
               className="text-blue-600 cursor-pointer"
             >
-              Privacy{" "}
-            </a>
+              Privacy
+            </a>{" "}
+            &{" "}
             <a
-              href={`${FRONTEND_URL}/refund-policy/${packageName}/${uuid}`}
+              href={`/refund-policy/${packageName}/${uuid}`}
               className="text-blue-600 cursor-pointer"
             >
-              {" "}
-              & Refund Policy
+              Refund Policy
             </a>
           </p>
         </div>

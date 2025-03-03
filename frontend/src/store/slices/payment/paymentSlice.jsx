@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createOrder } from "./paymentThunks";
 
 const paymentSlice = createSlice({
   name: "payment",
-  initialState: {},
+  initialState: {
+    emailLoading: false,
+  },
   reducers: {},
   extraReducers: (builder) => {},
 });

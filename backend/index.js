@@ -3,11 +3,14 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
+import passport from "passport";
 import cookieParser from "cookie-parser";
+import session from "express-session";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import scriptRoutes from "./routes/scriptRoutes.js";
 import webhookRoutes from "./routes/webhookRoutes.js";
+import { googleAuth } from "./controllers/authController.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,6 +29,18 @@ app.use(
   })
 );
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+  })
+);
+
+googleAuth();
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
