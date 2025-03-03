@@ -1,4 +1,5 @@
 echo -e "\e[36mEnter the directory name where you want to install the project (from current location)\e[0m"
+echo -e "\e[32mCurrent Directory: $CurrentDir\e[0m"
 echo -e "\e[33m(You can enter '.' for current dir, '..' to go back one level, or a full path for a custom location)\e[0m"
 
 read -p "Enter the directory: " UserInput

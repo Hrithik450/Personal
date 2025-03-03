@@ -1,4 +1,5 @@
 Write-Host "Enter the directory name where you want to install the project (from current location)" -ForegroundColor Cyan
+Write-Host "Current Directory: $CurrentDir" -ForegroundColor Green
 Write-Host "(You can enter '.' for current dir, or '..' to go back one level, or a full path for a custom location)" -ForegroundColor Yellow
 
 $UserInput = Read-Host "Enter the directory"
