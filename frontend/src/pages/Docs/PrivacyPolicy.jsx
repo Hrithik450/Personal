@@ -9,7 +9,7 @@ const PrivacyPolicy = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-black">Privacy Policy</h1>
         <a
-          href={`/payment/${packageName}/${uuid}`}
+          href={`/feedback/${packageName}/${uuid}`}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
           Back
@@ -67,7 +67,7 @@ const PrivacyPolicy = () => {
       </ul>
       <p className="mt-2">
         To exercise these rights, contact us at{" "}
-        <strong>CodeEasePackages@gmail.com</strong>.
+        <strong>codeeasepackages@gmail.com</strong>.
       </p>
 
       <h2 className="text-2xl font-semibold mt-6">6. Changes to This Policy</h2>
@@ -79,14 +79,14 @@ const PrivacyPolicy = () => {
       <h2 className="text-2xl font-semibold mt-6">7. Contact Information</h2>
       <p className="mt-2">For any questions, contact us at:</p>
       <ul className="list-disc list-inside mt-2">
-        <li>Email: CodeEasePackages@gmail.com</li>
+        <li>Email: codeeasepackages@gmail.com</li>
         <li>Phone: +91-7483229386.</li>
         <li>Address:#21, Peenya 2nd Stage, Bangalore - 560058, Karnataka</li>
       </ul>
 
       <footer className="text-center text-sm text-gray-600 mt-6">
         Thank you for using CodeEase. For support, contact us at
-        <strong> CodeEasePackages@gmail.com</strong>.
+        <strong> codeeasepackages@gmail.com</strong>.
         <br /> Copyright © 2025 CodeEase. All Rights Reserved.
       </footer>
     </div>

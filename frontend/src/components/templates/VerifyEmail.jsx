@@ -9,7 +9,7 @@ const VerifyEmailTemplate = () => {
     <div className="max-w-lg mx-auto p-5 text-gray-800 bg-gray-100 border border-gray-300 rounded-md">
       <div className="text-center">
         <img
-          src="https://res.cloudinary.com/duozomapm/image/upload/v1740901356/codease_banner_1_hhgfvo.png"
+          src="https://res.cloudinary.com/duozomapm/image/upload/v1741177646/codeaseX_banner_gcoiqr.png"
           alt="CodeEase"
           className="w-full border border-white object-cover"
         />

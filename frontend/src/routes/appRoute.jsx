@@ -7,6 +7,7 @@ import TermsAndConditions from "../pages/Docs/TermsAndCond.jsx";
 import PrivacyPolicy from "../pages/Docs/PrivacyPolicy.jsx";
 import RefundPolicy from "../pages/Docs/RefundPolicy.jsx";
 import ContactUs from "../pages/Docs/ContactUs.jsx";
+import FeedbackForm from "../pages/Feedback/feedback.jsx";
 
 const AppRoutes = () => {
   return (
@@ -15,6 +16,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/payment/:packageName/:uuid" element={<PaymentPage />} />
+        <Route path="/feedback/:packageName/:uuid" element={<FeedbackForm />} />
         <Route
           path="/terms-and-conditions/:packageName/:uuid"
           element={<TermsAndConditions />}

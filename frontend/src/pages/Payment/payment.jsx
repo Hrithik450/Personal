@@ -114,7 +114,7 @@ const PaymentPage = () => {
             name: "codeEase",
             description: "Paying to codeEase",
             image:
-              "https://res.cloudinary.com/duozomapm/image/upload/v1740900611/codeEaseLogo_tt6wjb.png",
+              "https://res.cloudinary.com/duozomapm/image/upload/v1741177645/codeEaseXLogo_j7ojvi.png",
             order_id: res.orderID,
             theme: {
               color: "#F4C430",

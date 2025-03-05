@@ -24,7 +24,7 @@ const ContactUs = () => {
         Contact Information
       </h2>
       <ul className="list-disc list-inside text-gray-600 mb-4">
-        <li>Email: CodeEasePackages@gmail.com</li>
+        <li>Email: codeeasepackages@gmail.com</li>
         <li>Phone: +91-7483229386</li>
         <li>Address: Bangalore, Karnataka</li>
       </ul>
@@ -85,7 +85,7 @@ const ContactUs = () => {
 
       <footer className="text-center text-sm text-gray-600 mt-6">
         Thank you for using CodeEase. For support, contact us at
-        <strong> CodeEasePackages@gmail.com</strong>.
+        <strong> codeeasepackages@gmail.com</strong>.
         <br /> Copyright © 2025 CodeEase. All Rights Reserved.
       </footer>
     </div>

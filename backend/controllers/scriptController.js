@@ -44,14 +44,14 @@ export const getZipFile = async (req, res, next) => {
       });
     }
 
-    const licenseData = snapShot.docs[0].data();
+    // const licenseData = snapShot.docs[0].data();
 
-    if (licenseData.freeTrial !== "active" && licenseData.status !== "active") {
-      return res.status(400).json({
-        success: false,
-        message: "Please Purchase a license to continue",
-      });
-    }
+    // if (licenseData.freeTrial !== "active" && licenseData.status !== "active") {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Please Purchase a license to continue",
+    //   });
+    // }
 
     if (!project) {
       return res

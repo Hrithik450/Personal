@@ -10,6 +10,7 @@ import paymentRoutes from "./routes/paymentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import scriptRoutes from "./routes/scriptRoutes.js";
 import webhookRoutes from "./routes/webhookRoutes.js";
+import FeedbackRoutes from "./routes/feedbackRoutes.js";
 import { googleAuth } from "./controllers/authController.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -47,6 +48,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/scripts", scriptRoutes);
+app.use("/api/v1/feedback", FeedbackRoutes);
 app.use("/webhook", webhookRoutes);
 
 app.get("/", (req, res) => {

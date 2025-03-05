@@ -1,12 +1,12 @@
 import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { fileURLToPath } from "url";
-import path from "path";
-import crypto from "crypto";
+import db from "../config/db.js";
 import { DateTime } from "luxon";
 import Razorpay from "razorpay";
-import db from "../config/db.js";
+import crypto from "crypto";
 import dotenv from "dotenv";
 import axios from "axios";
+import path from "path";
 import ejs from "ejs";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,9 +26,9 @@ function getExpireTime(inputDate) {
   return inputDate.plus({ years: 1 }).toFormat("yyyy-MM-dd HH:mm:ss");
 }
 
-function generateLicense(uuid, NoOfTimesRegistered) {
+function generateLicense(uuid, NoOfTimesInstalled) {
   const hash = crypto
-    .createHmac("sha256", process.env.SECRET + String(NoOfTimesRegistered))
+    .createHmac("sha256", process.env.SECRET + String(NoOfTimesInstalled))
     .update(uuid)
     .digest("hex")
     .slice(0, 8);
@@ -52,7 +52,7 @@ export const checkPayment = async (req, res) => {
   if (!existingDoc.exists()) {
     return res
       .status(404)
-      .json({ success: false, message: "Payment failed, retry again!" });
+      .json({ success: false, message: "Server error, retry again!" });
   }
 
   res.json({ credentials: existingDoc.data() });
@@ -73,17 +73,18 @@ export const registerDevice = async (req, res) => {
     const docRef = doc(db, packageName, uuid);
     const existingDoc = await getDoc(docRef);
 
-    let NoOfTimesRegistered = 1;
+    let NoOfTimesInstalled = 1;
     if (existingDoc.exists()) {
-      NoOfTimesRegistered = existingDoc.data().NoOfTimesRegistered + 1;
+      NoOfTimesInstalled = existingDoc.data().NoOfTimesInstalled + 1;
     }
 
-    const license = generateLicense(uuid, NoOfTimesRegistered);
+    const license = generateLicense(uuid, NoOfTimesInstalled);
 
     const data = {
       license: license,
-      NoOfTimesRegistered: NoOfTimesRegistered,
+      NoOfTimesInstalled: NoOfTimesInstalled,
       status: "pending",
+      FeedbackStatus: "pending",
       freeTrial: existingDoc.exists() ? "inactive" : "active",
       createdAt: getLiveTime(DateTime.now().setZone("Asia/Kolkata")),
     };

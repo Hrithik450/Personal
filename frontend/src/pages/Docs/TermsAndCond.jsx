@@ -9,7 +9,7 @@ const TermsAndConditions = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-black">Terms And Conditions</h1>
         <a
-          href={`/payment/${packageName}/${uuid}`}
+          href={`/feedback/${packageName}/${uuid}`}
           className="bg-blue-500 text-white px-4 py-2 rounded"
         >
           Back
@@ -75,13 +75,13 @@ const TermsAndConditions = () => {
       </Section>
 
       <Section title="11. Contact Us">
-        For any questions, contact us at CodeEasePackages@gmail.com or
+        For any questions, contact us at codeeasepackages@gmail.com or
         +91-7483229386.
       </Section>
 
       <footer className="text-center text-sm text-gray-600 mt-6">
         Thank you for using CodeEase. For support, contact us at
-        <strong> CodeEasePackages@gmail.com</strong>.
+        <strong> codeeasepackages@gmail.com</strong>.
         <br /> Copyright © 2025 CodeEase. All Rights Reserved.
       </footer>
     </div>
