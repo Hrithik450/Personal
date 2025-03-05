@@ -319,7 +319,7 @@ const FeedbackForm = () => {
           <div className="px-2 mt-4">
             <h3 className="text-black font-serif text-lg mb-2 text-center">
               Developers are saving an average of 90% time in setting up MERN
-              project using CodeEaseX!
+              project using CodeEaseX
             </h3>
 
             <img
