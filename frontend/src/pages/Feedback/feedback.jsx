@@ -20,6 +20,7 @@ const FeedbackForm = () => {
     name: "",
     likes: [],
     source: "",
+    number: null,
   });
   const dispatch = useDispatch();
 
@@ -185,10 +186,29 @@ const FeedbackForm = () => {
               )}
             </div>
 
+            <label className="block font-semibold mt-4 text-black">
+              Contact Number<span className="text-red-500">*</span>
+            </label>
+            <input
+              required
+              type="number"
+              name="number"
+              placeholder="e.g: 7483229386"
+              value={data.number}
+              onChange={handleChange}
+              pattern="[0-9]{10}"
+              className="w-full p-2 rounded-lg mt-1 border-2 border-gray-400 focus:border-pink-600 placeholder-gray-500 text-black"
+            />
+
             <button
               onClick={handleNext}
-              disabled={!data.name || !data.email}
-              className="mt-4 w-full bg-blue-500 text-white p-2 rounded disabled:bg-gray-400"
+              disabled={
+                !data.name ||
+                !data.email ||
+                !data.number ||
+                data.number.length !== 10
+              }
+              className="mt-4 w-full bg-blue-500 text-white p-2 rounded disabled:bg-gray-400 cursor-pointer"
             >
               Next
             </button>
@@ -218,14 +238,14 @@ const FeedbackForm = () => {
             <div className="flex justify-between mt-6">
               <button
                 onClick={handlePrev}
-                className="bg-gray-500 text-white px-5 py-1 rounded-2xl"
+                className="bg-gray-500 text-white px-5 py-1 rounded-2xl cursor-pointer"
               >
                 Back
               </button>
               <button
                 onClick={handleNext}
                 disabled={data.likes.length === 0}
-                className={`bg-blue-600 text-white px-5 py-1 rounded-2xl ${
+                className={`bg-blue-600 text-white px-5 py-1 rounded-2xl cursor-pointer ${
                   data.likes.length === 0 && "opacity-50 cursor-not-allowed"
                 }`}
               >
@@ -260,14 +280,14 @@ const FeedbackForm = () => {
             <div className="flex justify-between mt-6">
               <button
                 onClick={handlePrev}
-                className="bg-gray-500 text-white px-5 py-1 rounded-2xl"
+                className="bg-gray-500 text-white px-5 py-1 rounded-2xl cursor-pointer"
               >
                 Back
               </button>
               <button
                 onClick={handleNext}
                 disabled={!data.source}
-                className={`bg-blue-600 text-white px-5 py-1 rounded-2xl ${
+                className={`bg-blue-600 text-white px-5 py-1 rounded-2xl cursor-pointer ${
                   !data.source && "opacity-50 cursor-not-allowed"
                 }`}
               >
@@ -298,14 +318,14 @@ const FeedbackForm = () => {
             <div className="flex justify-between mt-6">
               <button
                 onClick={handlePrev}
-                className="bg-gray-500 text-white px-5 py-1 rounded-2xl"
+                className="bg-gray-500 text-white px-5 py-1 rounded-2xl cursor-pointer"
               >
                 Back
               </button>
               <button
                 onClick={handleNext}
                 disabled={!data.source}
-                className={`bg-blue-600 text-white px-5 py-1 rounded-2xl ${
+                className={`bg-blue-600 text-white px-5 py-1 rounded-2xl cursor-pointer ${
                   !data.source && "opacity-50 cursor-not-allowed"
                 }`}
               >
@@ -331,13 +351,13 @@ const FeedbackForm = () => {
               <button
                 onClick={handlePrev}
                 disabled={feedbackLoading ? true : false}
-                className="bg-gray-500 text-white px-5 py-1 rounded-2xl"
+                className="bg-gray-500 text-white px-5 py-1 rounded-2xl cursor-pointer"
               >
                 Back
               </button>
               <button
                 onClick={handleSubmit}
-                className={`bg-green-600 text-white px-5 py-1 rounded-2xl`}
+                className={`bg-green-600 text-white px-5 py-1 rounded-2xl cursor-pointer`}
               >
                 {feedbackLoading ? <DotSpinner color="white" /> : " Submit"}
               </button>

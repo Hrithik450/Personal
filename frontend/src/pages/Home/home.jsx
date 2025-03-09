@@ -46,7 +46,7 @@ const Home = () => {
                   alt=""
                   className="h-32 w-full object-cover rounded"
                 />
-                <h2 className="text-gray-600 text-sm bg-gray-200 px-2 py-1 rounded font-mono text-sm mt-2">
+                <h2 className="text-gray-600 text-sm bg-gray-200 px-2 py-1 rounded font-mono mt-2">
                   <code>{pkg.code}</code>
                 </h2>
                 <p className="text-gray-800 text-sm mt-2">{pkg.description}</p>
