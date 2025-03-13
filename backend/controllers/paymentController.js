@@ -187,7 +187,7 @@ export const capturePayment = async (req, res, next) => {
       ],
     };
 
-    const PACKAGE_URL = `https://www.npmjs.com/package/${packageName}`;
+    const PACKAGE_URL = `https://github.com/Hrithik450/${packageName}`;
     const templatePath = path.resolve("views", "success.ejs");
     const htmlcontent = await ejs.renderFile(templatePath, {
       packageDetails,

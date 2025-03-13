@@ -44,14 +44,14 @@ export const getZipFile = async (req, res, next) => {
       });
     }
 
-    // const licenseData = snapShot.docs[0].data();
+    const licenseData = snapShot.docs[0].data();
 
-    // if (licenseData.freeTrial !== "active" && licenseData.status !== "active") {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "Please Purchase a license to continue",
-    //   });
-    // }
+    if (licenseData.freeTrial !== "active" && licenseData.status !== "active") {
+      return res.status(400).json({
+        success: false,
+        message: "Please Purchase a license to continue",
+      });
+    }
 
     if (!project) {
       return res
@@ -77,7 +77,7 @@ export const getZipFile = async (req, res, next) => {
       return res.status(404).json({ error: "Bin directory not found" });
     }
 
-    res.download(zipFile, "bin.zip", (err) => {
+    res.download(zipFile, "setup.zip", (err) => {
       if (err) {
         console.error("Error serving file:", err);
         res.status(500).send("Error downloading script");
