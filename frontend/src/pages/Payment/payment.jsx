@@ -111,8 +111,8 @@ const PaymentPage = () => {
             key: import.meta.env.VITE_RAZORPAY_API_KEY,
             amount: res.amount,
             currency: "INR",
-            name: "codeEase",
-            description: "Paying to codeEase",
+            name: "codeEaseX",
+            description: "Paying to codeEaseX",
             image:
               "https://res.cloudinary.com/duozomapm/image/upload/v1741177645/codeEaseXLogo_j7ojvi.png",
             order_id: res.orderID,
@@ -191,7 +191,7 @@ const PaymentPage = () => {
       >
         <div className="bg-black text-white text-center rounded-t-2xl p-4">
           <h2 className="text-lg font-semibold">
-            THANKS FOR CHOOSING <span className="text-blue-200">CODEEASE</span>
+            THANKS FOR CHOOSING <span className="text-blue-200">CODEEASEX</span>
           </h2>
         </div>
         <div className="p-6">
