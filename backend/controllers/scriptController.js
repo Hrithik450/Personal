@@ -3,14 +3,7 @@ import { fileURLToPath } from "url";
 import AdmZip from "adm-zip";
 import fs from "fs";
 import db from "../config/db.js";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

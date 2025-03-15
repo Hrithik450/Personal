@@ -10,8 +10,10 @@ import paymentRoutes from "./routes/paymentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import scriptRoutes from "./routes/scriptRoutes.js";
 import webhookRoutes from "./routes/webhookRoutes.js";
-import FeedbackRoutes from "./routes/feedbackRoutes.js";
+import feedbackRoutes from "./routes/feedbackRoutes.js";
+import errorRoutes from "./routes/errorRoutes.js";
 import { googleAuth } from "./controllers/authController.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -48,8 +50,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/scripts", scriptRoutes);
-app.use("/api/v1/feedback", FeedbackRoutes);
+app.use("/api/v1/feedback", feedbackRoutes);
+app.use("/api/v1/analyze", errorRoutes);
 app.use("/webhook", webhookRoutes);
+app.use(errorHandler);
 
 app.get("/", (req, res) => {
   res.send("API is running...");

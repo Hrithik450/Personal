@@ -74,7 +74,7 @@ const PaymentPage = () => {
     e.preventDefault();
 
     const orderData = {
-      totalAmount: 149,
+      totalAmount: 249,
       paymentId: "",
       payerId: "",
     };
@@ -245,7 +245,7 @@ const PaymentPage = () => {
               isPaymentStart ? "pt-4 pb-4" : ""
             } ${!emailVerified && "opacity-50 cursor-not-allowed"}`}
           >
-            {isPaymentStart ? <DotSpinner color="white" /> : "PAY ₹149/ year"}
+            {isPaymentStart ? <DotSpinner color="white" /> : "PAY ₹249/-"}
           </button>
 
           <p className="text-sm text-center text-gray-500 mt-4">
