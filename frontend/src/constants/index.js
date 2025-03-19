@@ -255,7 +255,8 @@ export const benefits = [
     id: "0",
     title: "mern-launcher",
     text: "mern-launcher automates setting up frontend and backend folders, installing dependencies, and initializing servers, making development faster and hassle-free.",
-    backgroundUrl: "./src/assets/benefits/card-1.svg",
+    backgroundUrl:
+      "https://res.cloudinary.com/duozomapm/image/upload/v1742390486/card-6_envtpa.svg",
     iconUrl: benefitIcon1,
     snippet: "npx mern-launcher@1.0.0",
     redirect: "https://github.com/Hrithik450/mern-launcher",
@@ -267,7 +268,8 @@ export const benefits = [
     id: "1",
     title: "ecom-launcher",
     text: "ecom-launcher automates setting up eCommerce structure, installing dependencies, and initializing servers, making development faster and hassle-free.",
-    backgroundUrl: "./src/assets/benefits/card-2.svg",
+    backgroundUrl:
+      "https://res.cloudinary.com/duozomapm/image/upload/v1742390486/card-5_f3xt2b.svg",
     iconUrl: benefitIcon2,
     snippet: "npx ecom-launcher@1.0.0",
     redirect: "https://github.com/Hrithik450/mern-ecom",
@@ -280,7 +282,8 @@ export const benefits = [
     id: "2",
     title: "error-debugger",
     text: "This tool generates a detailed error.md report in your current working directory leveraging AI, making debugging faster and more efficient.",
-    backgroundUrl: "./src/assets/benefits/card-3.svg",
+    backgroundUrl:
+      "https://res.cloudinary.com/duozomapm/image/upload/v1742390486/card-1_wk2evg.svg",
     iconUrl: benefitIcon3,
     snippet: "npx error-debugger@1.0.0",
     redirect: "https://github.com/Hrithik450/mern-errors",

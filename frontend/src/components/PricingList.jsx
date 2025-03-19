@@ -52,7 +52,7 @@ const PricingList = () => {
           )}
 
           {item.price && (
-            <div className="text-lg text-green-400 font-semibold mb-6">
+            <div className="animate-bounce text-lg text-green-400 font-semibold mb-6">
               Special Price: ${item.price} (Save $
               {item.originalPrice - item.price})
             </div>
