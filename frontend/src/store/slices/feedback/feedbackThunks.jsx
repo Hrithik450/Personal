@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { alertObject } from "../../../constants";
 import { toast } from "react-toastify";
-import { AlertObject } from "../../../components/common/config";
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
@@ -17,12 +17,12 @@ export const createFeedback = createAsyncThunk(
         }
       );
 
-      toast.success(response?.data?.message, AlertObject);
+      toast.success(response?.data?.message, alertObject);
       return response?.data;
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Something went wrong.";
-      toast.error(errorMessage, AlertObject);
+      toast.error(errorMessage, alertObject);
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }
