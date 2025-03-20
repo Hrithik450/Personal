@@ -2,8 +2,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import AdmZip from "adm-zip";
 import fs from "fs";
-import db from "../config/db.js";
 import { collection, getDocs, query, where } from "firebase/firestore";
+import db from "../database/firebase.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

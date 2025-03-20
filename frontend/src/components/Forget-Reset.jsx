@@ -1,35 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { FaEnvelope } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
+import { forgetPassword } from "../store/slices/auth/authThunks";
+import DotSpinner from "./design/Spinner";
 
 const ForgetPassword = ({ toggleForget }) => {
+  const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const [formData, setFormData] = useState({
     email: searchParams.get("email") || "",
   });
-
-  useEffect(() => {
-    setSearchParams((prevParams) => {
-      const newParams = new URLSearchParams(prevParams);
-
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value) {
-          newParams.set(key, value);
-        } else {
-          newParams.delete(key);
-        }
-      });
-
-      return newParams;
-    });
-  }, [formData]);
+  const { authLoading } = useSelector((state) => state.authReducer);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {
-    return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const result = await dispatch(forgetPassword(formData)).unwrap();
+    if (result?.success) setSearchParams({});
   };
 
   return (
@@ -60,6 +52,7 @@ const ForgetPassword = ({ toggleForget }) => {
               <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="email"
+                name="email"
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
@@ -71,7 +64,7 @@ const ForgetPassword = ({ toggleForget }) => {
               type="submit"
               className="w-full bg-gradient-to-r from-[#ff7e5f] to-[#feb47b] hover:from-[#ff6f4f] hover:to-[#fea46b] text-white font-semibold py-2 rounded-md transition-all duration-300 transform hover:scale-105"
             >
-              Send Reset Link
+              {authLoading ? <DotSpinner /> : "Send Reset Link"}
             </button>
           </form>
         </div>

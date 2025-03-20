@@ -1,19 +1,39 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash, FaLock } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams, useSearchParams } from "react-router-dom";
+import { resetPassword } from "../store/slices/auth/authThunks";
+import DotSpinner from "./design/Spinner";
 
 const ResetPassword = ({ toggleReset }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const resetToken = searchParams.get("resetToken") || "";
+  const dispatch = useDispatch();
   const [passwordVisible, setpasswordVisible] = useState(false);
   const [formData, setFormData] = useState({
     password: "",
     confirmPassword: "",
   });
+  const { authLoading } = useSelector((state) => state.authReducer);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {
-    return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const result = await dispatch(
+      resetPassword({ formData, resetToken })
+    ).unwrap();
+
+    if (result?.success) {
+      setSearchParams((prevParams) => {
+        const newParams = new URLSearchParams(prevParams);
+        newParams.delete("resetToken");
+        newParams.delete("resetPassword");
+        return newParams;
+      });
+    }
   };
 
   return (
@@ -78,7 +98,7 @@ const ResetPassword = ({ toggleReset }) => {
               type="submit"
               className="w-full bg-gradient-to-r from-[#ff7e5f] to-[#feb47b] hover:from-[#ff6f4f] hover:to-[#fea46b] text-white font-semibold py-2 rounded-md transition-all duration-300 transform hover:scale-105"
             >
-              Reset Password
+              {authLoading ? <DotSpinner /> : "Reset Password"}
             </button>
           </form>
         </div>

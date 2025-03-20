@@ -6,13 +6,12 @@ import MenuSvg from "../assets/svg/MenuSvg";
 import { HamburgerMenu } from "./design/Header";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleAcc } from "../store/slices/auth/authSlice";
 
 const Header = ({ toggleAccount, toggleAuthen }) => {
   const dispatch = useDispatch();
   const pathname = useLocation();
   const [openNavigation, setOpenNavigation] = useState(false);
-  const auth = false;
+  const auth = localStorage.getItem("isAuthenticated") === "true";
 
   const toggleNavigation = () => {
     if (openNavigation) {

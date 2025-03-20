@@ -1,6 +1,5 @@
 import { doc, setDoc, getDoc, updateDoc, or } from "firebase/firestore";
 import { fileURLToPath } from "url";
-import db from "../config/db.js";
 import { DateTime } from "luxon";
 import Razorpay from "razorpay";
 import crypto from "crypto";
@@ -8,6 +7,7 @@ import dotenv from "dotenv";
 import axios from "axios";
 import path from "path";
 import ejs from "ejs";
+import db from "../database/firebase.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

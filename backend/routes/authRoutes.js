@@ -3,7 +3,16 @@ import express from "express";
 import passport from "passport";
 import dotenv from "dotenv";
 import path from "path";
-import CryptoJS from "crypto-js";
+import {
+  forgetPassword,
+  login,
+  logout,
+  Profile,
+  resetPassword,
+  setCookie,
+  signup,
+} from "../controllers/authController.js";
+import { isAuthenticated } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -12,40 +21,48 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, "config/config.env") });
 
-const encryptEmail = (email) => {
-  const encrypted = CryptoJS.AES.encrypt(
-    email,
-    process.env.MAIL_SECRET
-  ).toString();
-  return encrypted;
-};
+router.post("/signup", signup);
+router.post("/login", login);
+router.post("/forget-password", forgetPassword);
+router.post("/reset-password/:resetToken", resetPassword);
+router.get("/profile", isAuthenticated, Profile);
+router.post("/set-cookie", setCookie);
+router.get("/logout", logout);
 
 router.get(
   "/google",
-  (req, res, next) => {
-    const redirectUrl = req.query.redirectUrl || process.env.FRONTEND_URL;
-    req.session.redirectUrl = redirectUrl;
-    next();
-  },
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
-router.get("/google/callback", (req, res, next) => {
-  passport.authenticate("google", { session: false }, (err, user, info) => {
-    const redirectUrl = req.session?.redirectUrl || process.env.FRONTEND_URL;
+router.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: `${process.env.FRONTEND_URL}/?authpage=open&auth=login`,
+    session: false,
+  }),
+  (req, res) => {
+    const user = req.user;
+    const url = `${process.env.FRONTEND_URL}/?authpage=open&auth=login&tempToken=${user.userID}`;
+    res.redirect(url);
+  }
+);
 
-    if (err || !user) {
-      return res.redirect(`${redirectUrl}`);
-    }
+router.get(
+  "/facebook",
+  passport.authenticate("facebook", { scope: ["email"] })
+);
 
-    const userEmail = user.email;
-    const encryptedEmail = encryptEmail(userEmail);
-
-    const url = new URL(decodeURIComponent(redirectUrl));
-    url.searchParams.set("data", encodeURIComponent(encryptedEmail));
-
-    res.redirect(url.toString());
-  })(req, res, next);
-});
+router.get(
+  "/facebook/callback",
+  passport.authenticate("facebook", {
+    failureRedirect: `${process.env.FRONTEND_URL}/?authpage=open&auth=login`,
+    session: false,
+  }),
+  (req, res) => {
+    const user = req.user;
+    const url = `${process.env.FRONTEND_URL}/?authpage=open&auth=login&tempToken=${user.userID}`;
+    res.redirect(url);
+  }
+);
 
 export default router;

@@ -12,10 +12,12 @@ import Payment from "./components/Payment";
 import Auth from "./components/Login";
 import ForgetPassword from "./components/Forget-Reset";
 import ResetPassword from "./components/ResetPassword";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import useCheckTokenExpiry from "./hooks/token";
 
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  useCheckTokenExpiry();
 
   const modalState = useMemo(
     () => ({

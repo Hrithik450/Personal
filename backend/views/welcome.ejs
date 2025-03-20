@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        color: #333;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 550px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      .header img {
+        width: 100%;
+        border-radius: 10px;
+      }
+
+      .body {
+        padding: 20px;
+        text-align: left;
+      }
+
+      .body img {
+        width: 100%;
+        border-radius: 10px;
+        margin: 10px 0;
+      }
+
+      .body h2,
+      .body h3 {
+        color: #222;
+      }
+
+      .body p {
+        margin: 0.5rem 0;
+        font-size: 1.1rem;
+        line-height: 1.5;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 12px 24px;
+        font-size: 16px;
+        background-color: #0088ff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+
+      .button:hover {
+        background-color: #0077dd;
+      }
+
+      .footer {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #555;
+        text-align: left;
+      }
+
+      .link {
+        color: #0073e6;
+        text-decoration: none;
+      }
+
+      .link:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 479px) {
+        .body {
+          padding: 1rem 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <img
+          src="https://res.cloudinary.com/duozomapm/image/upload/v1742028539/codeaseX_banner_8_cffagx.png"
+          alt="CodeEaseX"
+        />
+      </div>
+
+      <div class="body">
+        <h2>Reduce Development Time Drastically with CodeEaseXCurve</h2>
+        <p class="desc">
+          CodeEaseX automates the entire development process with AI, making
+          setup and coding effortless.
+        </p>
+        <a href="<%= CLIENT_URL %>/" class="button">Get Started</a>
+
+        <p>Thank you for choosing CodeEaseX!</p>
+        <p>Best Regards,</p>
+        <p>Team CodeEaseX</p>
+        <p>
+          Need help?
+          <a href="<%= CLIENT_URL %>/contact-us" class="link"
+            >Contact us here.</a
+          >
+        </p>
+      </div>
+
+      <div class="footer">
+        &copy; 2025-2026 All rights reserved | Designed and Developed by
+        <a href="https://hruthik.onrender.com">Hruthik M</a>
+      </div>
+    </div>
+  </body>
+</html>

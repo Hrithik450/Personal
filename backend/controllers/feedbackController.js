@@ -1,6 +1,6 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import db from "../database/firebase.js";
 import { fileURLToPath } from "url";
-import db from "../config/db.js";
 import dotenv from "dotenv";
 import path from "path";
 

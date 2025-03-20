@@ -4,10 +4,14 @@ import { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
 import { alertObject } from "../constants";
 import SubscriptionCard from "./design/Subscription";
-import { toggleAcc } from "../store/slices/auth/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchprofile, logout } from "../store/slices/auth/authThunks";
+import DotSpinner from "./design/Spinner";
+import { useSearchParams } from "react-router-dom";
 
 const Profile = ({ toggleAccount }) => {
+  const { user, authLoading } = useSelector((state) => state.authReducer);
+  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const apiKeyRef = useRef(null);
 
@@ -21,6 +25,10 @@ const Profile = ({ toggleAccount }) => {
     if (apiKeyRef.current) {
       apiKeyRef.current.scrollLeft = apiKeyRef.current.scrollWidth;
     }
+    const fetchProfile = async () => {
+      await dispatch(fetchprofile()).unwrap();
+    };
+    fetchProfile();
   }, []);
 
   const onUpgrade = () => {
@@ -31,9 +39,30 @@ const Profile = ({ toggleAccount }) => {
     return;
   };
 
-  const onLogout = () => {
-    return;
+  const onLogout = async () => {
+    const result = await dispatch(logout()).unwrap();
+    if (result?.success) setSearchParams({});
   };
+
+  if (authLoading) {
+    return (
+      <div className="fixed top-0 right-0 z-[101] min-h-screen max-h-screen max-w-[450px] w-full overflow-hidden overflow-y-auto p-5 bg-gradient-to-br from-[#2b4162] to-[#12100e] border border-gray-700 shadow-2xl text-white animate-slideIn max-md:max-w-full max-sm:max-w-full sm:w-full sm:p-6 my-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+            Account
+          </h2>
+          <button
+            onClick={toggleAccount}
+            className="text-white text-2xl cursor-pointer hover:text-red-500 transition-colors duration-300"
+          >
+            ✕
+          </button>
+        </div>
+
+        <DotSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className="fixed top-0 right-0 z-[101] min-h-screen max-h-screen max-w-[450px] w-full overflow-hidden overflow-y-auto p-5 bg-gradient-to-br from-[#2b4162] to-[#12100e] border border-gray-700 shadow-2xl text-white animate-slideIn max-md:max-w-full max-sm:max-w-full sm:w-full sm:p-6">
@@ -65,14 +94,14 @@ const Profile = ({ toggleAccount }) => {
           Name
         </h4>
         <p className="max-sm:text-sm text-lg text-white/80 sm:text-base">
-          Hruthik M
+          {user?.username}
         </p>
 
         <h4 className="max-sm:text-sm text-lg font-bold sm:text-base bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
           Email
         </h4>
         <p className="max-sm:text-sm text-lg text-white/80 sm:text-base">
-          mhrithik450@gmail.com
+          {user?.email}
         </p>
 
         <h4 className="max-sm:text-sm text-lg font-bold sm:text-base bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
@@ -92,6 +121,13 @@ const Profile = ({ toggleAccount }) => {
             <MdContentCopy className="text-lg" />
           </button>
         </div>
+
+        <h4 className="max-sm:text-sm text-lg font-bold sm:text-base bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+          Last login
+        </h4>
+        <p className="max-sm:text-sm text-lg text-white/80 sm:text-base">
+          {user?.lastLogin}
+        </p>
       </div>
 
       <SubscriptionCard
