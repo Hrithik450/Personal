@@ -66,13 +66,13 @@ export const navigation = [
   {
     id: "4",
     title: "Sign in",
-    url: "#login",
+    url: "/?authpage=open&auth=login",
     onlyMobile: true,
   },
   {
     id: "5",
     title: "Account",
-    url: "#login",
+    url: "/?account=open",
     onlyMobile: true,
   },
 ];
