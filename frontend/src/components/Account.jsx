@@ -36,7 +36,12 @@ const Profile = ({ toggleAccount }) => {
   };
 
   const onRenew = () => {
-    return;
+    setSearchParams({
+      subscription: "Premium",
+      payment: "open",
+      duration: "plan4",
+      paymentMethod: "crypto",
+    });
   };
 
   const onLogout = async () => {
@@ -89,7 +94,7 @@ const Profile = ({ toggleAccount }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-[1fr_2fr] max-sm:grid-cols-1 gap-y-4 mt-6 md:my-10">
+      <div className="grid grid-cols-[1fr_2fr] max-sm:grid-cols-1 gap-y-4 mt-6 md:my-10 items-center">
         <h4 className="max-sm:text-sm text-lg font-bold sm:text-base bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
           Name
         </h4>
@@ -104,23 +109,30 @@ const Profile = ({ toggleAccount }) => {
           {user?.email}
         </p>
 
-        <h4 className="max-sm:text-sm text-lg font-bold sm:text-base bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-          API Key
-        </h4>
-        <div className="flex items-center">
-          <p
-            ref={apiKeyRef}
-            className="max-sm:text-sm text-lg text-white/80 sm:text-base overflow-x-auto whitespace-nowrap pr-2"
-          >
-            kjefliubBKYEFVSDKUWFG
-          </p>
-          <button
-            onClick={handleCopy}
-            className="text-white/70 hover:text-white transition-colors duration-200"
-          >
-            <MdContentCopy className="text-lg" />
-          </button>
-        </div>
+        {user?.subscription?.apiKey && !user?.subscription?.expired && (
+          <>
+            <h4 className="max-sm:text-sm text-lg font-bold sm:text-base bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+              API Key
+            </h4>
+            <div className="flex items-center rounded-md">
+              <div className="w-48 max-w-full overflow-hidden">
+                <p
+                  ref={apiKeyRef}
+                  className="text-sm text-white/80 whitespace-nowrap overflow-x-auto"
+                >
+                  {user.subscription.apiKey}
+                </p>
+              </div>
+
+              <button
+                onClick={handleCopy}
+                className="ml-4 p-2 bg-gradient-to-r from-[#4ade80] to-[#22c55e] rounded-md hover:from-[#3bc76e] hover:to-[#1d9f4d] transition-all duration-300"
+              >
+                <MdContentCopy className="h-5 w-5 text-white" />
+              </button>
+            </div>
+          </>
+        )}
 
         <h4 className="max-sm:text-sm text-lg font-bold sm:text-base bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
           Last login
@@ -130,13 +142,16 @@ const Profile = ({ toggleAccount }) => {
         </p>
       </div>
 
-      <SubscriptionCard
-        subscription={"Premium"}
-        expiryDate={"10-11-2025"}
-        onUpgrade={onUpgrade}
-        price={"$3.5/mon"}
-        onRenew={onRenew}
-      />
+      {user?.subscription?.package && (
+        <SubscriptionCard
+          subscription={user?.subscription?.package}
+          expiryDate={user?.subscription?.expiry}
+          onUpgrade={onUpgrade}
+          price={`$${user?.subscription?.priceRate}/mon`}
+          onRenew={onRenew}
+          expired={user?.subscription?.expired}
+        />
+      )}
 
       <div className="my-6">
         <button

@@ -1,38 +1,81 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PlanConfirmationCard from "./Confcard";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
+function getPlanName(duration) {
+  switch (duration) {
+    case 6:
+      return "plan2";
+    case 12:
+      return "plan3";
+    case 24:
+      return "plan4";
+    default:
+      return "plan1";
+  }
+}
+
+function calculateExpiryDate(months) {
+  const currentDate = new Date();
+  const expiryDate = new Date(currentDate);
+  expiryDate.setMonth(currentDate.getMonth() + months);
+  const year = expiryDate.getFullYear();
+  const month = String(expiryDate.getMonth() + 1).padStart(2, "0");
+  const day = String(expiryDate.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+const discounts = {
+  6: "2.5%",
+  12: "5%",
+  24: "10%",
+};
+
+const durationDiscounts = {
+  6: 2.5,
+  12: 5,
+  24: 10,
+};
+
+const planToDuration = {
+  plan1: 1,
+  plan2: 6,
+  plan3: 12,
+  plan4: 24,
+};
 
 const PaymentDetailsTab = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const subscription = searchParams.get("subscription");
 
+  const plan = searchParams.get("duration") || "plan1";
+  const paymentMethod = searchParams.get("paymentMethod") || "card";
+  const duration = planToDuration[plan] || 1;
+  const navigate = useNavigate();
+
   const price =
     subscription === "Premium" ? 3.5 : subscription === "Pro" ? 2.5 : 0;
 
-  const [paymentMethod, setPaymentMethod] = useState("card");
-  const [duration, setDuration] = useState(1);
+  useEffect(() => {
+    if (!searchParams.get("duration") || !searchParams.get("paymentMethod")) {
+      const newParams = new URLSearchParams(searchParams);
 
-  const calculateExpiryDate = (months) => {
-    const currentDate = new Date();
-    const expiryDate = new Date(currentDate);
-    expiryDate.setMonth(currentDate.getMonth() + months);
-    const year = expiryDate.getFullYear();
-    const month = String(expiryDate.getMonth() + 1).padStart(2, "0");
-    const day = String(expiryDate.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
+      if (!searchParams.get("duration")) newParams.set("duration", "plan1");
+      if (!searchParams.get("paymentMethod"))
+        newParams.set("paymentMethod", "card");
 
-  const getFreeMonths = (months) => {
-    switch (months) {
-      case 6:
-        return 1;
-      case 12:
-        return 2;
-      case 24:
-        return 4;
-      default:
-        return 0;
+      navigate(`?${newParams.toString()}`, { replace: true });
     }
+  }, [searchParams, navigate]);
+
+  const getTotalDiscountPercentage = () => {
+    let discount = paymentMethod === "crypto" ? 10 : 0;
+
+    if (durationDiscounts[duration]) {
+      discount += durationDiscounts[duration];
+    }
+
+    return discount;
   };
 
   const calculateDiscountedPrice = (price, discount) => {
@@ -41,12 +84,35 @@ const PaymentDetailsTab = () => {
 
   const getTotalPrice = () => {
     let totalPrice = price * duration;
-    if (paymentMethod === "crypto") {
-      totalPrice = calculateDiscountedPrice(totalPrice, 10);
-    } else {
-      totalPrice = price * duration;
-    }
+    const totalDiscount = getTotalDiscountPercentage();
+    totalPrice = calculateDiscountedPrice(totalPrice, totalDiscount);
     return totalPrice.toFixed(2);
+  };
+
+  const openCryptoPay = () => {
+    setSearchParams((prevParams) => {
+      const newParams = new URLSearchParams(prevParams);
+      newParams.set("cryptoPay", "open");
+      return newParams;
+    });
+  };
+
+  const updatePaymentMethod = (newPaymentMethod) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("paymentMethod", newPaymentMethod);
+    setSearchParams(newParams);
+  };
+
+  const updateDuration = (newDuration) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("duration", getPlanName(newDuration));
+    setSearchParams(newParams);
+  };
+
+  const handleSubmit = () => {
+    if (paymentMethod !== "card") {
+      openCryptoPay();
+    }
   };
 
   return (
@@ -59,7 +125,7 @@ const PaymentDetailsTab = () => {
 
           <div className="grid grid-cols-1 gap-4">
             <label
-              onClick={() => setPaymentMethod("card")}
+              onClick={() => updatePaymentMethod("card")}
               className={`p-6 rounded-xl transition-all duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
                 paymentMethod === "card"
                   ? "bg-gradient-to-r from-blue-600 to-blue-800 border-2 border-blue-500 shadow-xl"
@@ -97,7 +163,7 @@ const PaymentDetailsTab = () => {
             </label>
 
             <label
-              onClick={() => setPaymentMethod("crypto")}
+              onClick={() => updatePaymentMethod("crypto")}
               className={`p-6 rounded-xl transition-all duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
                 paymentMethod === "crypto"
                   ? "bg-gradient-to-r from-purple-600 to-purple-800 border-2 border-purple-500 shadow-xl"
@@ -149,7 +215,7 @@ const PaymentDetailsTab = () => {
             {[1, 6, 12, 24].map((months) => (
               <button
                 key={months}
-                onClick={() => setDuration(months)}
+                onClick={() => updateDuration(months)}
                 className={`p-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 ${
                   duration === months
                     ? "bg-gradient-to-r from-green-500 to-green-700 text-white shadow-lg"
@@ -159,11 +225,9 @@ const PaymentDetailsTab = () => {
                 <span className="text-2xl font-bold">
                   {months} {months > 1 ? "Months" : "Month"}
                 </span>
-                {getFreeMonths(months) > 0 && (
+                {discounts[months] && (
                   <span className="text-sm mt-2 bg-green-500/20 px-3 py-1 rounded-full animate-bounce">
-                    Get {getFreeMonths(months)} Month
-                    {getFreeMonths(months) > 1 ? "s" : ""} Free! ({months} +{" "}
-                    {getFreeMonths(months)})
+                    🎉 Flat {discounts[months]} OFF on {months} Months!
                   </span>
                 )}
                 {duration === months && (
@@ -198,13 +262,23 @@ const PaymentDetailsTab = () => {
       />
 
       <div className="mb-8">
-        <h3 className="text-xl font-bold mb-3 bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+        <h3 className="text-xl font-bold mb-3 bg-gradient-to-r from-[#4ade80] to-[#22c55e] bg-clip-text text-transparent">
           Total Price
         </h3>
-        <div className="bg-gradient-to-r from-[#2b4162] to-[#12100e] p-6 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-105">
-          <p className="text-4xl font-bold text-white animate-pulse">
-            ${getTotalPrice()}
-          </p>
+        <div className="bg-gradient-to-r from-[#14532d] to-[#166534] p-6 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-105">
+          <div className="text-lg text-gray-300 line-through mb-2">
+            Original Price: ${price * duration}
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <p className="text-4xl font-bold text-white animate-pulse">
+              ${getTotalPrice()}
+            </p>
+            <span className="text-md font-semibold bg-gradient-to-r from-[#ff7e5f] to-[#feb47b] text-white px-3 py-1 rounded-full animate-bounce">
+              🎉 Flat {getTotalDiscountPercentage()}% Off
+            </span>
+          </div>
+
           <p className="text-sm text-gray-300 mt-2">
             Inclusive of all taxes and fees
           </p>
@@ -212,7 +286,10 @@ const PaymentDetailsTab = () => {
       </div>
 
       <div className="mt-8">
-        <button className="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-3 px-6 rounded-lg font-semibold text-lg hover:from-green-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">
+        <button
+          onClick={handleSubmit}
+          className="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-3 px-6 rounded-lg font-semibold text-lg hover:from-green-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105"
+        >
           Pay Now
         </button>
       </div>

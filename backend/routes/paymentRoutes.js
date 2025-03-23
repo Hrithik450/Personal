@@ -24,7 +24,7 @@ router.post("/checkTrial", checkTrial);
 router.post("/sendCode", SendCode);
 router.post("/verifyCode", verifyEmail);
 router.post("/sendMail", sendEmail);
-router.post("/crypto", cryptoPay);
-router.get("/crypto/address", getDepositAddress);
+router.post("/crypto/verify", cryptoPay);
+router.get("/crypto/getAddress", getDepositAddress);
 
 export default router;

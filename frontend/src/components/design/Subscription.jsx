@@ -6,6 +6,7 @@ const SubscriptionCard = ({
   price,
   onUpgrade,
   onRenew,
+  expired,
 }) => {
   return (
     <div className="bg-gradient-to-br from-[#1a2a6c] to-[#b21f1f] rounded-2xl p-8 text-white shadow-2xl mt-4 transform transition-all duration-300 hover:scale-105 hover:shadow-3xl">
@@ -41,9 +42,15 @@ const SubscriptionCard = ({
           </button>
         )}
         <div className="text-right">
-          <span className="text-sm text-gray-300">Expires at: </span>
-          <span className="font-medium text-sm bg-gradient-to-r from-[#ff7e5f] to-[#feb47b] bg-clip-text text-transparent">
-            {expiryDate}
+          <span className="text-sm text-gray-300">
+            {expired ? "" : "Expires at:"}
+          </span>
+          <span
+            className={`font-medium text-${
+              expired ? "lg" : "sm"
+            } bg-gradient-to-r from-[#ff7e5f] to-[#feb47b] bg-clip-text text-transparent`}
+          >
+            {expired ? "Expired" : expiryDate}
           </span>
         </div>
       </div>

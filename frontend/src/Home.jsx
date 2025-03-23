@@ -14,6 +14,8 @@ import ForgetPassword from "./components/Forget-Reset";
 import ResetPassword from "./components/ResetPassword";
 import { useEffect, useMemo } from "react";
 import useCheckTokenExpiry from "./hooks/token";
+import CryptoPayment from "./components/Crypto";
+import CryptoQr from "./components/CryptoQr";
 
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,6 +28,8 @@ const Home = () => {
       isForgetOpen: searchParams.get("forgetPassword") === "open",
       isAuthOpen: searchParams.get("authpage") === "open",
       isResetOpen: searchParams.get("resetPassword") === "open",
+      isCryptoOpen: searchParams.get("cryptoPay") === "open",
+      isCryptoPay: searchParams.get("cryptoPayOpen") === "open",
     }),
     [searchParams]
   );
@@ -54,6 +58,12 @@ const Home = () => {
   return (
     <>
       <div className="pt-[4.75rem] lg:pt-[5.25rem] overflow-hidden">
+        {modalState.isCryptoPay && (
+          <CryptoQr toggleCrypto={() => toggleParam("cryptoPayOpen")} />
+        )}
+        {modalState.isCryptoOpen && (
+          <CryptoPayment toggleCrypto={() => toggleParam("cryptoPay")} />
+        )}
         {modalState.isForgetOpen && (
           <ForgetPassword toggleForget={() => toggleParam("forgetPassword")} />
         )}
@@ -63,9 +73,7 @@ const Home = () => {
             toggleForget={() => toggleParam("forgetPassword")}
           />
         )}
-        {modalState.isPayOpen && (
-          <Payment togglePayment={() => toggleParam("payment")} />
-        )}
+        {modalState.isPayOpen && <Payment />}
         {modalState.isAccOpen && (
           <Profile toggleAccount={() => toggleParam("account")} />
         )}

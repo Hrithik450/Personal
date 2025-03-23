@@ -6,11 +6,7 @@ const Payment = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const closePayment = () => {
-    if (searchParams.get("subscription")) {
-      searchParams.delete("subscription");
-    }
-    searchParams.delete("payment");
-    setSearchParams(searchParams);
+    setSearchParams({});
   };
 
   return (

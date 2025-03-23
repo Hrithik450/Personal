@@ -23,6 +23,7 @@ import {
 } from "firebase/firestore";
 
 const usersRef = collection(db, "CodeEaseXUsers");
+const SubscriptionRef = collection(db, "CodeEaseXSubscriptions");
 
 export function getLiveDate(inputDate) {
   return inputDate.toFormat("yyyy-MM-dd HH:mm:ss");
@@ -502,15 +503,33 @@ export const Profile = async (req, res, next) => {
         .json({ success: false, message: "User not found." });
     }
 
+    let subsData = null;
+    const subscription = doc(SubscriptionRef, UserId);
+    const snapshot = await getDoc(subscription);
+
+    if (snapshot.exists()) {
+      subsData = snapshot.data();
+    }
+
+    const currentTime = DateTime.now().setZone("Asia/Kolkata").toMillis();
+
     const user = UserSnapShot.data();
     return res.status(200).json({
       success: true,
       user: {
         ...user,
         password: null,
+        subscription: {
+          package: subsData?.subscription.Subscription || null,
+          priceRate: subsData?.subscription.PlanRate || null,
+          expiry: subsData?.subscription.ValidTillDate || null,
+          apiKey: user.apiKey || null,
+          expired: subsData?.subscription.ValidTill < currentTime,
+        },
       },
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       success: false,
       message: "Server error. Please try again later.",

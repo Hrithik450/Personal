@@ -3,6 +3,21 @@ import axios from "axios";
 import path from "path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
+import QRCode from "qrcode";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import db from "../database/firebase.js";
+import { DateTime } from "luxon";
+import createSubscription from "../models/Subscription.js";
+import { getLiveDate } from "./authController.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,83 +27,307 @@ dotenv.config({ path: path.resolve(__dirname, "../config/config.env") });
 const BINANCE_SECRET_KEY = process.env.BINANCE_SECRET_KEY;
 const BINANCE_API_KEY = process.env.BINANCE_API_KEY;
 
-function signRequest(queryString, secretKey) {
+const TransactionRef = collection(db, "CodeEaseXSubscriptions");
+const usersCollRef = collection(db, "CodeEaseXUsers");
+
+const REQUIRED_CONFIRMATIONS = {
+  TRX: 1,
+  BCH: 2,
+  XRP: 1,
+  DOGE: 6,
+  LTC: 3,
+  XLM: 1,
+  SOL: 1,
+};
+
+function generateAPIKey() {
+  return crypto.randomBytes(32).toString("hex");
+}
+
+function SignReq(query_string) {
   return crypto
-    .createHmac("sha256", secretKey)
-    .update(queryString)
+    .createHmac("sha256", BINANCE_SECRET_KEY)
+    .update(query_string)
     .digest("hex");
 }
 
-export const getDepositAddress = async (req, res, next) => {
-  const { asset, network } = req.query;
+function getValidTillMillis(months) {
+  return DateTime.now()
+    .setZone("Asia/Kolkata")
+    .plus({ months: months })
+    .toMillis();
+}
 
-  if (!asset || !network) {
-    return res.status(400).json({ error: "Missing asset or network" });
+function getValidTillDateString(months) {
+  return DateTime.now()
+    .setZone("Asia/Kolkata")
+    .plus({ months: months })
+    .toFormat("yyyy-MM-dd");
+}
+
+async function convertUSDTtoCrypto(totalPriceUSDT, cryptoSymbol, userID) {
+  const userRef = doc(db, "CodeEaseXUsers", userID);
+  const docSnap = await getDoc(userRef);
+  const currentTime = DateTime.now().setZone("Asia/Kolkata").toMillis();
+
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+
+    if (data.depositInfo && data.depositInfo[cryptoSymbol]) {
+      const timeDiff = currentTime - data.depositInfo[cryptoSymbol].timestamp;
+      const timeDiffMinutes = timeDiff / (60 * 1000);
+
+      if (timeDiffMinutes < 60 * 60 * 1000) {
+        return data.depositInfo[cryptoSymbol].cryptoAmount;
+      }
+    }
+  }
+
+  try {
+    const response = await axios.get(
+      `https://api.binance.com/api/v3/ticker/price?symbol=${cryptoSymbol}USDT`
+    );
+    const cryptoPrice = parseFloat(response.data.price);
+    if (!cryptoPrice) throw new Error("Invalid price data received.");
+
+    const cryptoAmount = (totalPriceUSDT / cryptoPrice).toFixed(6);
+
+    const userRef = doc(db, "CodeEaseXUsers", userID);
+    await setDoc(
+      userRef,
+      {
+        depositInfo: {
+          [cryptoSymbol]: {
+            cryptoAmount,
+            timestamp: DateTime.now().toMillis(),
+          },
+        },
+      },
+      { merge: true }
+    );
+
+    return cryptoAmount;
+  } catch (error) {
+    console.error(`Error fetching ${cryptoSymbol} price:`, error.message);
+    return null;
+  }
+}
+
+async function generateQRCode(address) {
+  try {
+    const qrCodeData = await QRCode.toDataURL(address);
+    return qrCodeData;
+  } catch (error) {
+    console.error("Error generating QR Code:", error);
+  }
+}
+
+async function getBinanceTransaction(txId) {
+  try {
+    const serverTimeResponse = await axios.get(
+      "https://api4.binance.com/api/v3/time"
+    );
+    const timestamp = serverTimeResponse.data.serverTime;
+    const queryString = `timestamp=${timestamp}`;
+    const signature = SignReq(queryString);
+
+    const response = await axios.get(
+      `https://api.binance.com/sapi/v1/capital/deposit/hisrec?${queryString}&signature=${signature}`,
+      { headers: { "X-MBX-APIKEY": BINANCE_API_KEY } }
+    );
+
+    const transaction = response.data.find((tx) => tx.txId === txId);
+    return transaction || null;
+  } catch (error) {
+    console.error("Error fetching Binance transaction:", error);
+    return null;
+  }
+}
+
+export async function expireSubscriptions() {
+  try {
+    const currentTimestamp = DateTime.now().setZone("Asia/Kolkata").toMillis();
+
+    const subscriptionsRef = collection(db, "CodeEaseXSubscriptions");
+    const q = query(
+      subscriptionsRef,
+      where("subscription.ValidTill", "<", currentTimestamp),
+      where("subscription.SubscriptionStatus", "==", "active")
+    );
+
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+      const updatePromises = snapshot.docs.map(async (doc) => {
+        await updateDoc(doc.ref, {
+          "subscription.SubscriptionStatus": "inactive",
+        });
+      });
+
+      await Promise.all(updatePromises);
+      console.log(`Updated ${snapshot.docs.length} subscriptions to inactive.`);
+    } else {
+      console.log("No expired subscriptions found.");
+    }
+  } catch (error) {
+    console.error("Error expiring subscriptions:", error);
+  }
+}
+
+export const getDepositAddress = async (req, res, next) => {
+  const { asset, network, totalUSDT, userID } = req.query;
+
+  if (!asset || !network || !userID) {
+    return res.status(400).json({ error: "Missing required parameters" });
   }
 
   try {
     const serverTimeResponse = await axios.get(
-      "https://api.binance.com/api/v3/time"
+      "https://api4.binance.com/api/v3/time"
     );
     const timestamp = serverTimeResponse.data.serverTime;
-    const queryString = `coin=${asset}&network=${network}&timestamp=${timestamp}`;
-    const signature = signRequest(queryString, BINANCE_SECRET_KEY);
+
+    const recvWindow = 5000;
+    const queryString = `coin=${asset}&network=${network}&recvWindow=${recvWindow}&timestamp=${timestamp}`;
+    const signature = SignReq(queryString);
+
     const response = await axios.get(
       `https://api.binance.com/sapi/v1/capital/deposit/address?${queryString}&signature=${signature}`,
       {
         headers: { "X-MBX-APIKEY": BINANCE_API_KEY },
       }
     );
+
+    const depositAddress = response.data.address;
+    const addressTag = response.data.tag || null;
+    const qrCode = await generateQRCode(response.data.address);
+    let memoQrCode;
+    if (addressTag) memoQrCode = await generateQRCode(addressTag);
+    const cryptoAmount = await convertUSDTtoCrypto(totalUSDT, asset, userID);
+
+    if (!cryptoAmount) {
+      return res
+        .status(500)
+        .json({ error: "Failed to convert USDT to crypto" });
+    }
+
     res.status(200).json({
       success: true,
-      data: response.data,
+      message: "Deposit address generated successfully",
+      amount: cryptoAmount,
+      memoTag: addressTag,
+      memoQr: memoQrCode,
+      depositAddress,
+      qrCode,
     });
   } catch (error) {
-    console.error(
-      "Error fetching deposit address:",
-      error.response?.data || error.message
-    );
+    console.log(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
 export const cryptoPay = async (req, res, next) => {
-  const { txid } = req.body;
+  const { txid, coin, userData, subscription } = req.body;
 
-  //   if (!txid) {
-  //     return res.status(400).json({ error: "Missing txid or amount" });
-  //   }
+  if (!txid || !coin || !userData.userID)
+    return res.status(400).json({ message: "Missing required fields" });
 
   try {
-    const serverTimeResponse = await axios.get(
-      "https://api.binance.com/api/v3/time"
-    );
-    const serverTime = serverTimeResponse.data.serverTime;
+    const SubsRef = doc(TransactionRef, userData.userID);
+    const SubSnap = await getDoc(SubsRef);
 
-    const queryString = `timestamp=${serverTime}`;
-    const signature = signRequest(queryString, BINANCE_SECRET_KEY);
+    const txRef = doc(collection(db, "CryptoTransactions"), txid);
+    const txSnap = await getDoc(txRef);
+    if (txSnap.exists()) {
+      return res.status(400).json({ message: "Invalid TXID!" });
+    }
 
-    const response = await axios({
-      method: "GET",
-      url: `https://api.binance.com/sapi/v1/capital/deposit/hisrec?timestamp=${serverTime}&signature=${signature}`,
-      headers: {
-        "X-MBX-APIKEY": BINANCE_API_KEY,
-      },
+    const txData = await getBinanceTransaction(txid);
+    if (!txData) {
+      return res
+        .status(404)
+        .json({ message: "Transaction not found on Binance." });
+    }
+
+    if (txData.amount !== subscription.expectedAmount) {
+      return res
+        .status(400)
+        .json({ message: "Amount does not match the required deposit." });
+    }
+
+    if (txData.address !== subscription.expectedAddress) {
+      return res.status(400).json({ message: "Invalid deposit address." });
+    }
+
+    const userDataExists = SubSnap.exists();
+    const requiredConfirmations = REQUIRED_CONFIRMATIONS[coin.toUpperCase()];
+    const confirmTimes = parseInt(txData.confirmTimes.split("/")[0]);
+
+    const newTransaction = {
+      txid,
+      Coin: txData.coin,
+      Network: txData.network,
+      AmountInUsdt: subscription.usdtAmount,
+      AmountInCrypto: txData.amount,
+      ValidTill: getValidTillMillis(subscription.PlanDuration),
+      ValidTillDate: getValidTillDateString(subscription.PlanDuration),
+      PaymentStatus:
+        confirmTimes >= requiredConfirmations ? "confirmed" : "pending",
+      Subscription: subscription.Subscription,
+      PlanDuration: subscription.PlanDuration,
+      PaymentMode: subscription.PaymentMode,
+      PlanRate: subscription.PlanRate,
+      AmountPaidByUser: txData.amount,
+      PaidAddress: txData.address,
+      confirmations: `${confirmTimes}/${requiredConfirmations}`,
+      SubscriptionStatus:
+        confirmTimes >= requiredConfirmations ? "active" : "pending",
+    };
+
+    const apiKey =
+      confirmTimes >= requiredConfirmations ? generateAPIKey() : "pending";
+
+    const userRef = doc(usersCollRef, userData.userID);
+    await updateDoc(userRef, { apiKey });
+
+    if (userDataExists) {
+      await updateDoc(SubsRef, {
+        lastPurchased: getLiveDate(DateTime.now().setZone("Asia/Kolkata")),
+        subscription: newTransaction,
+      });
+    } else {
+      await createSubscription(
+        {
+          userID: userData.userID,
+          email: userData.email,
+          username: userData.username,
+          lastPurchased: getLiveDate(DateTime.now().setZone("Asia/Kolkata")),
+          subscription: newTransaction,
+        },
+        userData.userID
+      );
+    }
+
+    await setDoc(txRef, {
+      txid,
+      userID: userData.userID,
+      username: userData.username,
+      userEmail: userData.email,
     });
 
-    const transactions = response.data;
-    console.log(transactions);
+    res.status(200).json({
+      success: true,
+      message:
+        confirmTimes >= requiredConfirmations
+          ? "Payment Successfull!"
+          : "Payment pending...",
+      transaction: newTransaction,
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
-export const getAddresses = async (req, res, next) => {
-  getDepositAddress("USDT", "BEP20").then((address) => {
-    console.log("Generated Address:", address);
-  });
-
-  return res.status(200).json({
-    success: true,
-  });
-};
+// function getValidTillMillisOneMinuteAhead() {
+//   return DateTime.now().setZone("Asia/Kolkata").plus({ minutes: 1 }).toMillis();
+// }

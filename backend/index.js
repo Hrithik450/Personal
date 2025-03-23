@@ -14,6 +14,7 @@ import feedbackRoutes from "./routes/feedbackRoutes.js";
 import errorRoutes from "./routes/errorRoutes.js";
 import { googleAuth } from "./controllers/authController.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import { monitor } from "./monitor.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,6 +42,7 @@ app.use(
   })
 );
 
+monitor();
 googleAuth();
 app.use(passport.initialize());
 app.use(passport.session());

@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AlertObject } from "../../../components/common/config";
+import { alertObject } from "../../../constants";
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const createOrder = createAsyncThunk(
@@ -20,7 +20,7 @@ export const createOrder = createAsyncThunk(
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Something went wrong.";
-      toast.error(errorMessage, AlertObject);
+      toast.error(errorMessage, alertObject);
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }
@@ -41,12 +41,12 @@ export const capturePayment = createAsyncThunk(
         }
       );
 
-      toast.success(response?.data?.message, AlertObject);
+      toast.success(response?.data?.message, alertObject);
       return response?.data;
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Something went wrong.";
-      toast.error(errorMessage, AlertObject);
+      toast.error(errorMessage, alertObject);
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }
@@ -64,12 +64,12 @@ export const sendCode = createAsyncThunk(
         }
       );
 
-      toast.success(response.data.message, AlertObject);
+      toast.success(response.data.message, alertObject);
       return response?.data;
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Something went wrong.";
-      toast.error(errorMessage, AlertObject);
+      toast.error(errorMessage, alertObject);
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }
@@ -87,12 +87,57 @@ export const verifyCode = createAsyncThunk(
         }
       );
 
-      toast.success(response.data.message, AlertObject);
+      toast.success(response.data.message, alertObject);
       return response?.data;
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Something went wrong.";
-      toast.error(errorMessage, AlertObject);
+      toast.error(errorMessage, alertObject);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const fetchDepositAddress = createAsyncThunk(
+  "fetch/address",
+  async ({ asset, network, totalUSDT, userID }, thunkAPI) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/api/v1/payment/crypto/getAddress?asset=${asset}&network=${network}&totalUSDT=${totalUSDT}&userID=${userID}`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      return response?.data;
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Something went wrong.";
+      toast.error(errorMessage, alertObject);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const verifyPayment = createAsyncThunk(
+  "verify/payment",
+  async ({ txid, coin, userData, subscription }, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/v1/payment/crypto/verify`,
+        { txid, coin, userData, subscription },
+        {
+          withCredentials: true,
+        }
+      );
+
+      toast.success(response?.data?.message, alertObject);
+      return response?.data;
+    } catch (error) {
+      console.log(error);
+      const errorMessage =
+        error.response?.data?.message || "Something went wrong.";
+      toast.error(errorMessage, alertObject);
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }
