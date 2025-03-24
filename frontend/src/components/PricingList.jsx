@@ -1,13 +1,25 @@
 import { useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { alertObject, pricing } from "../constants";
 import { check } from "../assets";
-import { pricing } from "../constants";
+import { useEffect, useState } from "react";
+import { fetchprofile } from "../store/slices/auth/authThunks";
+import { toast } from "react-toastify";
 
 const PricingList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const dispatch = useDispatch();
+
+  const { user } = useSelector((state) => state.authReducer);
+  useEffect(() => {
+    const fetchData = async () => {
+      await dispatch(fetchprofile()).unwrap();
+    };
+    fetchData();
+  }, [dispatch]);
 
   const Checkout = (subscription) => {
     const planName = subscription.split(" ")[0];
-
     const newParams = new URLSearchParams(searchParams);
 
     newParams.set("subscription", planName);
@@ -58,13 +70,21 @@ const PricingList = () => {
             </div>
           )}
 
-          <button
-            className="w-full mb-8 bg-gradient-to-r from-blue-600 to-purple-700 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-800 transition-all duration-300 transform hover:scale-105"
-            onClick={() => Checkout(item.title)}
-            white={!!item.price}
-          >
-            {item.price && "Choose plan"}
-          </button>
+          {item.title === "Basic Plan" ? (
+            <button
+              className="w-full mb-8 bg-gradient-to-r from-blue-600 to-purple-700 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-800 transition-all duration-300 transform hover:scale-105"
+              onClick={user?.freeTrial ? undefined : () => Checkout(item.title)}
+            >
+              {user?.freeTrial ? user?.freeTrial : "Choose Plan"}
+            </button>
+          ) : (
+            <button
+              className="w-full mb-8 bg-gradient-to-r from-blue-600 to-purple-700 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-800 transition-all duration-300 transform hover:scale-105"
+              onClick={() => Checkout(item.title)}
+            >
+              Choose Plan
+            </button>
+          )}
 
           <ul>
             {item.features.map((feature, index) => (

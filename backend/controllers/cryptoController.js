@@ -147,8 +147,8 @@ async function getBinanceTransaction(txId) {
 export async function expireSubscriptions() {
   try {
     const currentTimestamp = DateTime.now().setZone("Asia/Kolkata").toMillis();
-
     const subscriptionsRef = collection(db, "CodeEaseXSubscriptions");
+
     const q = query(
       subscriptionsRef,
       where("subscription.ValidTill", "<", currentTimestamp),
@@ -157,18 +157,27 @@ export async function expireSubscriptions() {
 
     const snapshot = await getDocs(q);
 
-    if (!snapshot.empty) {
-      const updatePromises = snapshot.docs.map(async (doc) => {
-        await updateDoc(doc.ref, {
-          "subscription.SubscriptionStatus": "inactive",
-        });
+    if (snapshot.empty) {
+      console.log("No expired subscriptions found!");
+      return;
+    }
+
+    const updatePromises = snapshot.docs.map(async (docSnap) => {
+      const subsData = docSnap.data();
+      const userID = subsData.userID;
+
+      await updateDoc(docSnap.ref, {
+        "subscription.SubscriptionStatus": "inactive",
       });
 
-      await Promise.all(updatePromises);
-      console.log(`Updated ${snapshot.docs.length} subscriptions to inactive.`);
-    } else {
-      console.log("No expired subscriptions found.");
-    }
+      if (subsData.subscription.Subscription === "Basic") {
+        const userRef = doc(usersCollRef, userID);
+        await updateDoc(userRef, { freeTrial: "Expired" });
+      }
+    });
+
+    await Promise.all(updatePromises);
+    console.log(`Updated ${snapshot.docs.length} subscriptions to inactive.`);
   } catch (error) {
     console.error("Error expiring subscriptions:", error);
   }
@@ -325,6 +334,69 @@ export const cryptoPay = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const freePack = async (req, res, next) => {
+  try {
+    const { userData, subscription } = req.body;
+
+    const SubsRef = doc(TransactionRef, userData.userID);
+    const SubSnap = await getDoc(SubsRef);
+
+    const userDataExists = SubSnap.exists();
+
+    const newTransaction = {
+      AmountInUsdt: subscription.usdtAmount,
+      ValidTill: DateTime.now()
+        .setZone("Asia/Kolkata")
+        .plus({ hours: 24 })
+        .toMillis(),
+      ValidTillDate: DateTime.now()
+        .setZone("Asia/Kolkata")
+        .plus({ hours: 24 })
+        .toFormat("yyyy-MM-dd"),
+      PaymentStatus: "confirmed",
+      Subscription: subscription.Subscription,
+      AmountPaidByUser: subscription.usdtAmount,
+      PlanRate: subscription.PlanRate,
+      SubscriptionStatus: "active",
+    };
+
+    if (userDataExists) {
+      await updateDoc(SubsRef, {
+        lastPurchased: getLiveDate(DateTime.now().setZone("Asia/Kolkata")),
+        subscription: newTransaction,
+      });
+    } else {
+      await createSubscription(
+        {
+          userID: userData.userID,
+          email: userData.email,
+          username: userData.username,
+          lastPurchased: getLiveDate(DateTime.now().setZone("Asia/Kolkata")),
+          subscription: newTransaction,
+        },
+        userData.userID
+      );
+    }
+
+    const apiKey = generateAPIKey();
+
+    const userRef = doc(usersCollRef, userData.userID);
+    await updateDoc(userRef, { apiKey, freeTrial: "Active" });
+
+    res.status(200).json({
+      success: true,
+      message: "Purchase Successful!",
+      transaction: newTransaction,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };
 

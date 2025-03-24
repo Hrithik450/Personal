@@ -36,7 +36,7 @@ const SubscriptionCard = ({
         ) : (
           <button
             onClick={onUpgrade}
-            className="animate-bounce bg-gradient-to-r from-[#1a2a6c] to-[#b21f1f] hover:from-[#1a2a7c] hover:to-[#b21f2f] text-white font-semibold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105"
+            className="animate-bounce bg-gradient-to-r from-[#ff7e5f] to-[#feb47b] hover:from-[#ff6f4f] hover:to-[#fea46b] text-white font-semibold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105"
           >
             Upgrade
           </button>

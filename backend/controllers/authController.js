@@ -520,10 +520,11 @@ export const Profile = async (req, res, next) => {
         ...user,
         password: null,
         subscription: {
+          apiKey: user.apiKey || null,
+          freeTrial: user.freeTrial || null,
           package: subsData?.subscription.Subscription || null,
           priceRate: subsData?.subscription.PlanRate || null,
           expiry: subsData?.subscription.ValidTillDate || null,
-          apiKey: user.apiKey || null,
           expired: subsData?.subscription.ValidTill < currentTime,
         },
       },

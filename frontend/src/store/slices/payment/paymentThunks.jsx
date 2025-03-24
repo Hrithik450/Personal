@@ -134,7 +134,29 @@ export const verifyPayment = createAsyncThunk(
       toast.success(response?.data?.message, alertObject);
       return response?.data;
     } catch (error) {
-      console.log(error);
+      const errorMessage =
+        error.response?.data?.message || "Something went wrong.";
+      toast.error(errorMessage, alertObject);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const freePack = createAsyncThunk(
+  "free/pack",
+  async ({ userData, subscription }, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/v1/payment/crypto/verify/freePack`,
+        { userData, subscription },
+        {
+          withCredentials: true,
+        }
+      );
+
+      toast.success(response?.data?.message, alertObject);
+      return response?.data;
+    } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Something went wrong.";
       toast.error(errorMessage, alertObject);

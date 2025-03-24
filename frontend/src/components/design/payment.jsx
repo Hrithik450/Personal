@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import PlanConfirmationCard from "./Confcard";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { freePack } from "../../store/slices/payment/paymentThunks";
+import { fetchprofile } from "../../store/slices/auth/authThunks";
+import DotSpinner from "./Spinner";
+import { toast } from "react-toastify";
+import { alertObject } from "../../constants";
 
 function getPlanName(duration) {
   switch (duration) {
@@ -46,13 +52,16 @@ const planToDuration = {
 
 const PaymentDetailsTab = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
   const subscription = searchParams.get("subscription");
 
   const plan = searchParams.get("duration") || "plan1";
   const paymentMethod = searchParams.get("paymentMethod") || "card";
   const duration = planToDuration[plan] || 1;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const { user, authLoading } = useSelector((state) => state.authReducer);
   const price =
     subscription === "Premium" ? 3.5 : subscription === "Pro" ? 2.5 : 0;
 
@@ -67,6 +76,13 @@ const PaymentDetailsTab = () => {
       navigate(`?${newParams.toString()}`, { replace: true });
     }
   }, [searchParams, navigate]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      await dispatch(fetchprofile()).unwrap();
+    };
+    fetchUserData();
+  }, [dispatch]);
 
   const getTotalDiscountPercentage = () => {
     let discount = paymentMethod === "crypto" ? 10 : 0;
@@ -109,11 +125,42 @@ const PaymentDetailsTab = () => {
     setSearchParams(newParams);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (paymentMethod !== "card") {
       openCryptoPay();
     }
+
+    if (subscription === "Basic") {
+      if (user?.freeTrial === "Expired" || user?.freeTrial === "Active")
+        return toast.error("Basic plan has expired!", alertObject);
+
+      const data = {
+        userData: {
+          username: user.username,
+          userID: user.userID,
+          email: user.email,
+        },
+        subscription: {
+          usdtAmount: 0,
+          Subscription: subscription,
+          PlanRate: 0,
+        },
+      };
+
+      try {
+        setIsLoading(true);
+        const res = await dispatch(freePack(data)).unwrap();
+        if (res?.success) setSearchParams({ account: "open" });
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
+    }
   };
+
+  if (authLoading) {
+    return <DotSpinner />;
+  }
 
   return (
     <div className="bg-gradient-to-br from-[#2b4162] to-[#12100e] rounded-2xl p-5 text-white shadow-lg mt-8">
@@ -290,7 +337,7 @@ const PaymentDetailsTab = () => {
           onClick={handleSubmit}
           className="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-3 px-6 rounded-lg font-semibold text-lg hover:from-green-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105"
         >
-          Pay Now
+          {isLoading ? <DotSpinner /> : "Pay Now"}
         </button>
       </div>
     </div>

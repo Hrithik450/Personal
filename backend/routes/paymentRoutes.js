@@ -11,6 +11,7 @@ import {
 import { sendEmail } from "../utils/sendMail.js";
 import {
   cryptoPay,
+  freePack,
   getDepositAddress,
 } from "../controllers/cryptoController.js";
 
@@ -25,6 +26,7 @@ router.post("/sendCode", SendCode);
 router.post("/verifyCode", verifyEmail);
 router.post("/sendMail", sendEmail);
 router.post("/crypto/verify", cryptoPay);
+router.post("/crypto/verify/freePack", freePack);
 router.get("/crypto/getAddress", getDepositAddress);
 
 export default router;

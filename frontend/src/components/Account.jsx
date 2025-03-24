@@ -147,9 +147,11 @@ const Profile = ({ toggleAccount }) => {
           subscription={user?.subscription?.package}
           expiryDate={user?.subscription?.expiry}
           onUpgrade={onUpgrade}
-          price={`$${user?.subscription?.priceRate}/mon`}
           onRenew={onRenew}
           expired={user?.subscription?.expired}
+          price={`$${user?.subscription?.priceRate || "0"}${
+            user?.subscription?.priceRate ? "/mon" : ""
+          }`}
         />
       )}
 
