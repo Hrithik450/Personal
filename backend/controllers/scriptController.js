@@ -4,9 +4,13 @@ import AdmZip from "adm-zip";
 import fs from "fs";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import db from "../database/firebase.js";
+import { DateTime } from "luxon";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const usersCollRef = collection(db, "CodeEaseXUsers");
+const TransactionRef = collection(db, "CodeEaseXSubscriptions");
 
 function zipDirectory(sourceDir, outputZipPath) {
   const zip = new AdmZip();
@@ -24,25 +28,40 @@ function zipDirectory(sourceDir, outputZipPath) {
 
 export const getZipFile = async (req, res, next) => {
   try {
-    const { licenseToken, project, packageName } = req.body;
+    const { apiKey, project } = req.body;
 
-    const docRef = collection(db, packageName);
-    const q = query(docRef, where("license", "==", licenseToken));
+    const q = query(usersCollRef, where("apiKey", "==", apiKey));
     const snapShot = await getDocs(q);
 
     if (snapShot.empty) {
       return res.status(400).json({
         success: false,
-        message: "Register your device!!",
+        message: "Invalid Api Key!!",
       });
     }
 
-    const licenseData = snapShot.docs[0].data();
+    const userData = snapShot.docs[0].data();
 
-    if (licenseData.freeTrial !== "active" && licenseData.status !== "active") {
+    const q1 = query(TransactionRef, where("userID", "==", userData.userID));
+    const snapShot2 = await getDocs(q1);
+
+    if (snapShot2.empty) {
       return res.status(400).json({
         success: false,
-        message: "Please Purchase a license to continue",
+        message: "No subscription found!!",
+      });
+    }
+
+    const subscriptionData = snapShot2.docs[0].data();
+
+    const currentTime = DateTime.now().setZone("Asia/Kolkata").toMillis();
+    if (
+      subscriptionData.subscription.SubscriptionStatus === "inactive" ||
+      subscriptionData.subscription.ValidTill < currentTime
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Your subscription is expired!!",
       });
     }
 
