@@ -9,6 +9,13 @@ import { fetchprofile, logout } from "../store/slices/auth/authThunks";
 import DotSpinner from "./design/Spinner";
 import { useSearchParams } from "react-router-dom";
 
+const plans = {
+  24: "plan4",
+  12: "plan3",
+  6: "plan2",
+  1: "plan1",
+};
+
 const Profile = ({ toggleAccount }) => {
   const { user, authLoading } = useSelector((state) => state.authReducer);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -31,16 +38,23 @@ const Profile = ({ toggleAccount }) => {
     fetchProfile();
   }, []);
 
-  const onUpgrade = () => {
-    return;
-  };
+  // console.log(user);
 
-  const onRenew = () => {
+  const onUpgrade = () => {
     setSearchParams({
       subscription: "Premium",
       payment: "open",
       duration: "plan4",
       paymentMethod: "crypto",
+    });
+  };
+
+  const onRenew = () => {
+    setSearchParams({
+      subscription: user.subscription.package,
+      payment: "open",
+      duration: plans[user.subscription.duration],
+      paymentMethod: user.subscription.method,
     });
   };
 

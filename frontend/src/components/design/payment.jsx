@@ -85,7 +85,7 @@ const PaymentDetailsTab = () => {
   }, [dispatch]);
 
   const getTotalDiscountPercentage = () => {
-    let discount = paymentMethod === "crypto" ? 10 : 0;
+    let discount = paymentMethod === "crypto" ? 5 : 0;
 
     if (durationDiscounts[duration]) {
       discount += durationDiscounts[duration];
@@ -127,7 +127,7 @@ const PaymentDetailsTab = () => {
 
   const handleSubmit = async () => {
     if (paymentMethod !== "card") {
-      openCryptoPay();
+      return openCryptoPay();
     }
 
     if (subscription === "Basic") {
@@ -155,7 +155,14 @@ const PaymentDetailsTab = () => {
       } finally {
         setIsLoading(false);
       }
+
+      return;
     }
+
+    return toast.error(
+      "This payment method is currently unavailable. Our team is working on it!",
+      alertObject
+    );
   };
 
   if (authLoading) {
@@ -246,7 +253,7 @@ const PaymentDetailsTab = () => {
                 Decentralized and secure
               </p>
               <div className="mt-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1 rounded-full text-sm font-semibold animate-bounce">
-                🎉 Flat 10% Off 🎉
+                🎉 Flat 5% Off 🎉
               </div>
             </label>
           </div>

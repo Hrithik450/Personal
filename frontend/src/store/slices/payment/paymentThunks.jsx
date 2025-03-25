@@ -100,10 +100,10 @@ export const verifyCode = createAsyncThunk(
 
 export const fetchDepositAddress = createAsyncThunk(
   "fetch/address",
-  async ({ asset, network, totalUSDT, userID }, thunkAPI) => {
+  async ({ asset, network, totalUSDT, userID, planDuration }, thunkAPI) => {
     try {
       const response = await axios.get(
-        `${API_URL}/api/v1/payment/crypto/getAddress?asset=${asset}&network=${network}&totalUSDT=${totalUSDT}&userID=${userID}`,
+        `${API_URL}/api/v1/payment/crypto/getAddress?asset=${asset}&network=${network}&totalUSDT=${totalUSDT}&userID=${userID}&planDuration=${planDuration}`,
         {
           withCredentials: true,
         }

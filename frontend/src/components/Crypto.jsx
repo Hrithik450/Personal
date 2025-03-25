@@ -96,7 +96,7 @@ const CryptoPayment = ({ toggleCrypto }) => {
   };
 
   const getTotalDiscountPercentage = () => {
-    let discount = paymentMethod === "crypto" ? 10 : 0;
+    let discount = paymentMethod === "crypto" ? 5 : 0;
 
     if (durationDiscounts[plans[plan]]) {
       discount += durationDiscounts[plans[plan]];

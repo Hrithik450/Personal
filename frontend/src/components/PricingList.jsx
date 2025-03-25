@@ -82,7 +82,9 @@ const PricingList = () => {
               className="w-full mb-8 bg-gradient-to-r from-blue-600 to-purple-700 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-800 transition-all duration-300 transform hover:scale-105"
               onClick={() => Checkout(item.title)}
             >
-              Choose Plan
+              {item.title.split(" ")[0] === user?.subscription?.package
+                ? "Active"
+                : "Choose Plan"}
             </button>
           )}
 

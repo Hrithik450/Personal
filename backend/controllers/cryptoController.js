@@ -65,7 +65,12 @@ function getValidTillDateString(months) {
     .toFormat("yyyy-MM-dd");
 }
 
-async function convertUSDTtoCrypto(totalPriceUSDT, cryptoSymbol, userID) {
+async function convertUSDTtoCrypto(
+  totalPriceUSDT,
+  cryptoSymbol,
+  userID,
+  planDuration
+) {
   const userRef = doc(db, "CodeEaseXUsers", userID);
   const docSnap = await getDoc(userRef);
   const currentTime = DateTime.now().setZone("Asia/Kolkata").toMillis();
@@ -73,11 +78,15 @@ async function convertUSDTtoCrypto(totalPriceUSDT, cryptoSymbol, userID) {
   if (docSnap.exists()) {
     const data = docSnap.data();
 
-    if (data.depositInfo && data.depositInfo[cryptoSymbol]) {
+    if (
+      data.depositInfo &&
+      data.depositInfo[cryptoSymbol] &&
+      data.depositInfo[cryptoSymbol].planDuration === planDuration
+    ) {
       const timeDiff = currentTime - data.depositInfo[cryptoSymbol].timestamp;
       const timeDiffMinutes = timeDiff / (60 * 1000);
 
-      if (timeDiffMinutes < 60 * 60 * 1000) {
+      if (timeDiffMinutes < 60) {
         return data.depositInfo[cryptoSymbol].cryptoAmount;
       }
     }
@@ -99,7 +108,8 @@ async function convertUSDTtoCrypto(totalPriceUSDT, cryptoSymbol, userID) {
         depositInfo: {
           [cryptoSymbol]: {
             cryptoAmount,
-            timestamp: DateTime.now().toMillis(),
+            planDuration,
+            timestamp: DateTime.now().setZone("Asia/Kolkata").toMillis(),
           },
         },
       },
@@ -184,9 +194,9 @@ export async function expireSubscriptions() {
 }
 
 export const getDepositAddress = async (req, res, next) => {
-  const { asset, network, totalUSDT, userID } = req.query;
+  const { asset, network, totalUSDT, userID, planDuration } = req.query;
 
-  if (!asset || !network || !userID) {
+  if (!asset || !network || !userID || !planDuration) {
     return res.status(400).json({ error: "Missing required parameters" });
   }
 
@@ -212,7 +222,12 @@ export const getDepositAddress = async (req, res, next) => {
     const qrCode = await generateQRCode(response.data.address);
     let memoQrCode;
     if (addressTag) memoQrCode = await generateQRCode(addressTag);
-    const cryptoAmount = await convertUSDTtoCrypto(totalUSDT, asset, userID);
+    const cryptoAmount = await convertUSDTtoCrypto(
+      totalUSDT,
+      asset,
+      userID,
+      planDuration
+    );
 
     if (!cryptoAmount) {
       return res
@@ -297,7 +312,7 @@ export const cryptoPay = async (req, res, next) => {
       confirmTimes >= requiredConfirmations ? generateAPIKey() : "pending";
 
     const userRef = doc(usersCollRef, userData.userID);
-    await updateDoc(userRef, { apiKey });
+    await updateDoc(userRef, { apiKey, freeTrial: "Expired" });
 
     if (userDataExists) {
       await updateDoc(SubsRef, {
@@ -399,7 +414,3 @@ export const freePack = async (req, res, next) => {
     });
   }
 };
-
-// function getValidTillMillisOneMinuteAhead() {
-//   return DateTime.now().setZone("Asia/Kolkata").plus({ minutes: 1 }).toMillis();
-// }

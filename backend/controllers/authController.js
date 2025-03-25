@@ -9,7 +9,7 @@ import path from "path";
 import ejs from "ejs";
 import db from "../database/firebase.js";
 import createUser from "../models/User.js";
-import { DateTime } from "luxon";
+import { DateTime, Duration } from "luxon";
 import {
   collection,
   query,
@@ -526,6 +526,8 @@ export const Profile = async (req, res, next) => {
           priceRate: subsData?.subscription.PlanRate || null,
           expiry: subsData?.subscription.ValidTillDate || null,
           expired: subsData?.subscription.ValidTill < currentTime,
+          duration: subsData?.subscription?.PlanDuration || null,
+          method: subsData?.subscription?.PaymentMode || null,
         },
       },
     });

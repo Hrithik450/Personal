@@ -54,6 +54,7 @@ const CryptoQr = ({ toggleCrypto }) => {
           network: selectedCrypto,
           totalUSDT: getTotalPrice(),
           userID: user.user.userID,
+          planDuration: plans[plan],
         };
 
         const response = await dispatch(fetchDepositAddress(data)).unwrap();
@@ -85,7 +86,7 @@ const CryptoQr = ({ toggleCrypto }) => {
   };
 
   const getTotalDiscountPercentage = () => {
-    let discount = paymentMethod === "crypto" ? 10 : 0;
+    let discount = paymentMethod === "crypto" ? 5 : 0;
 
     if (durationDiscounts[plans[plan]]) {
       discount += durationDiscounts[plans[plan]];
@@ -122,6 +123,7 @@ const CryptoQr = ({ toggleCrypto }) => {
           email: user.email,
         },
         subscription: {
+          // expectedAmount: "0.002",
           expectedAmount: cryptoData.amount,
           expectedAddress: cryptoData.depositAddress,
           usdtAmount: getTotalPrice(),
