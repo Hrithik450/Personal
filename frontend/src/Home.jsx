@@ -12,7 +12,7 @@ import Payment from "./components/Payment";
 import Auth from "./components/Login";
 import ForgetPassword from "./components/Forget-Reset";
 import ResetPassword from "./components/ResetPassword";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import useCheckTokenExpiry from "./hooks/token";
 import CryptoPayment from "./components/Crypto";
 import CryptoQr from "./components/CryptoQr";

@@ -40,6 +40,7 @@ import {
   nodejs,
   reddis,
   kotlin,
+  benefitIcon4,
 } from "../assets";
 
 export const navigation = [
@@ -255,10 +256,8 @@ export const benefits = [
     id: "0",
     title: "mern-launcher",
     text: "mern-launcher automates setting up frontend and backend folders, installing dependencies, and initializing servers, making development faster and hassle-free.",
-    backgroundUrl:
-      "https://res.cloudinary.com/duozomapm/image/upload/v1742390486/card-6_envtpa.svg",
     iconUrl: benefitIcon1,
-    snippet: "npx mern-launcher@1.0.0",
+    snippet: "npm i mern-quickstart@1.0.7",
     redirect: "https://github.com/Hrithik450/mern-launcher",
     imageUrl:
       "https://res.cloudinary.com/duozomapm/image/upload/v1741177645/codeEaseXLogo_j7ojvi.png",
@@ -268,10 +267,8 @@ export const benefits = [
     id: "1",
     title: "ecom-launcher",
     text: "ecom-launcher automates setting up eCommerce structure, installing dependencies, and initializing servers, making development faster and hassle-free.",
-    backgroundUrl:
-      "https://res.cloudinary.com/duozomapm/image/upload/v1742390486/card-5_f3xt2b.svg",
     iconUrl: benefitIcon2,
-    snippet: "npx ecom-launcher@1.0.0",
+    snippet: "npm i ecom-quickstart@1.0.2",
     redirect: "https://github.com/Hrithik450/mern-ecom",
     imageUrl:
       "https://res.cloudinary.com/duozomapm/image/upload/v1741177645/codeEaseXLogo_j7ojvi.png",
@@ -282,14 +279,49 @@ export const benefits = [
     id: "2",
     title: "error-debugger",
     text: "This tool generates a detailed error.md report in your current working directory leveraging AI, making debugging faster and more efficient.",
-    backgroundUrl:
-      "https://res.cloudinary.com/duozomapm/image/upload/v1742390486/card-1_wk2evg.svg",
     iconUrl: benefitIcon3,
-    snippet: "npx error-debugger@1.0.0",
-    redirect: "https://github.com/Hrithik450/mern-errors",
+    snippet: "npm i error-debugger@1.0.0",
+    redirect: "#",
     imageUrl:
       "https://res.cloudinary.com/duozomapm/image/upload/v1741177645/codeEaseXLogo_j7ojvi.png",
     url: "https://res.cloudinary.com/duozomapm/image/upload/v1740422740/package-3image_yofjxj.jpg",
+    upcoming: "coming",
+  },
+  {
+    id: "3",
+    title: "auth-quickstart",
+    text: "auth-quickstart provides a fully built-in authentication system for MERN applications, including user registration, login, JWT authentication, and role-based access, making secure authentication setup effortless. 🚀",
+    iconUrl: benefitIcon4,
+    snippet: "npm i auth-quickstart@1.0.0",
+    redirect: "#",
+    imageUrl:
+      "https://res.cloudinary.com/duozomapm/image/upload/v1741177645/codeEaseXLogo_j7ojvi.png",
+    url: "https://res.cloudinary.com/duozomapm/image/upload/v1743015789/authImage_rbe8em.jpg",
+    upcoming: "coming",
+  },
+  {
+    id: "4",
+    title: "pay-quickstart",
+    text: "pay-quickstart provides a built-in payment gateway integration for MERN applications, supporting Razorpay, Stripe, and cryptocurrency payments. Easily set up secure and seamless transactions with minimal effort. 🚀",
+    iconUrl: benefitIcon1,
+    snippet: "npm i pay-quickstart@1.0.0",
+    redirect: "#",
+    imageUrl:
+      "https://res.cloudinary.com/duozomapm/image/upload/v1741177645/codeEaseXLogo_j7ojvi.png",
+    url: "https://res.cloudinary.com/duozomapm/image/upload/v1740422740/Screenshot_2025-02-25_002520_rssieh.png",
+    upcoming: "coming",
+  },
+  {
+    id: "2",
+    title: "Oauth-quickstart",
+    text: "Oauth-quickstart provides built-in OAuth authentication for MERN applications, supporting Google, Facebook, LinkedIn, and more. Easily integrate social logins with pre-configured authentication functions. 🚀",
+    iconUrl: benefitIcon2,
+    snippet: "npm i oauth-quickstart@1.0.0",
+    redirect: "#",
+    imageUrl:
+      "https://res.cloudinary.com/duozomapm/image/upload/v1741177645/codeEaseXLogo_j7ojvi.png",
+    url: "https://res.cloudinary.com/duozomapm/image/upload/v1743015950/oAuthImage_kg8puz.webp",
+    upcoming: "coming",
   },
 ];
 
