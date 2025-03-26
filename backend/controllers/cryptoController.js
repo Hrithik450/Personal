@@ -252,6 +252,7 @@ export const getDepositAddress = async (req, res, next) => {
 
 export const cryptoPay = async (req, res, next) => {
   const { txid, coin, userData, subscription } = req.body;
+  const { usdtAmount } = subscription;
 
   if (!txid || !coin || !userData.userID)
     return res.status(400).json({ message: "Missing required fields" });

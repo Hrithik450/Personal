@@ -123,7 +123,6 @@ const CryptoQr = ({ toggleCrypto }) => {
           email: user.email,
         },
         subscription: {
-          // expectedAmount: "0.002",
           expectedAmount: cryptoData.amount,
           expectedAddress: cryptoData.depositAddress,
           usdtAmount: getTotalPrice(),
