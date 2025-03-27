@@ -257,7 +257,7 @@ export const benefits = [
     title: "mern-launcher",
     text: "mern-launcher automates setting up frontend and backend folders, installing dependencies, and initializing servers, making development faster and hassle-free.",
     iconUrl: benefitIcon1,
-    snippet: "npm i mern-quickstart@1.0.7",
+    snippet: "npm i mern-quickstart@1.0.8",
     redirect: "https://github.com/Hrithik450/mern-launcher",
     imageUrl:
       "https://res.cloudinary.com/duozomapm/image/upload/v1741177645/codeEaseXLogo_j7ojvi.png",
@@ -268,7 +268,7 @@ export const benefits = [
     title: "ecom-launcher",
     text: "ecom-launcher automates setting up eCommerce structure, installing dependencies, and initializing servers, making development faster and hassle-free.",
     iconUrl: benefitIcon2,
-    snippet: "npm i ecom-quickstart@1.0.2",
+    snippet: "npm i ecom-quickstart@1.0.3",
     redirect: "https://github.com/Hrithik450/mern-ecom",
     imageUrl:
       "https://res.cloudinary.com/duozomapm/image/upload/v1741177645/codeEaseXLogo_j7ojvi.png",
