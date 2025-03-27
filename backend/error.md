@@ -1,6 +1,5 @@
-
     # 🛠 Error Report:
-    **📂 File Location:**  
+    **📂 File Location:**
     `Unknown (requires inspection of request body)`
 
     ## ❌ Issue (Root Cause)

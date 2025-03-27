@@ -253,7 +253,7 @@ export const pricing = [
 
 export const benefits = [
   {
-    id: "0",
+    id: "1",
     title: "mern-launcher",
     text: "mern-launcher automates setting up frontend and backend folders, installing dependencies, and initializing servers, making development faster and hassle-free.",
     iconUrl: benefitIcon1,
@@ -264,7 +264,7 @@ export const benefits = [
     url: "https://res.cloudinary.com/duozomapm/image/upload/v1742364360/mernImage_farhpq.jpg",
   },
   {
-    id: "1",
+    id: "2",
     title: "ecom-launcher",
     text: "ecom-launcher automates setting up eCommerce structure, installing dependencies, and initializing servers, making development faster and hassle-free.",
     iconUrl: benefitIcon2,
@@ -274,18 +274,6 @@ export const benefits = [
       "https://res.cloudinary.com/duozomapm/image/upload/v1741177645/codeEaseXLogo_j7ojvi.png",
     url: "https://res.cloudinary.com/duozomapm/image/upload/v1742364527/Screenshot_2025-03-19_115115_vqmed6.png",
     light: true,
-  },
-  {
-    id: "2",
-    title: "error-debugger",
-    text: "This tool generates a detailed error.md report in your current working directory leveraging AI, making debugging faster and more efficient.",
-    iconUrl: benefitIcon3,
-    snippet: "npm i error-debugger@1.0.0",
-    redirect: "#",
-    imageUrl:
-      "https://res.cloudinary.com/duozomapm/image/upload/v1741177645/codeEaseXLogo_j7ojvi.png",
-    url: "https://res.cloudinary.com/duozomapm/image/upload/v1740422740/package-3image_yofjxj.jpg",
-    upcoming: "coming",
   },
   {
     id: "3",
@@ -312,7 +300,7 @@ export const benefits = [
     upcoming: "coming",
   },
   {
-    id: "2",
+    id: "5",
     title: "Oauth-quickstart",
     text: "Oauth-quickstart provides built-in OAuth authentication for MERN applications, supporting Google, Facebook, LinkedIn, and more. Easily integrate social logins with pre-configured authentication functions. 🚀",
     iconUrl: benefitIcon2,
@@ -321,6 +309,18 @@ export const benefits = [
     imageUrl:
       "https://res.cloudinary.com/duozomapm/image/upload/v1741177645/codeEaseXLogo_j7ojvi.png",
     url: "https://res.cloudinary.com/duozomapm/image/upload/v1743015950/oAuthImage_kg8puz.webp",
+    upcoming: "coming",
+  },
+  {
+    id: "6",
+    title: "notify-quickstart",
+    text: "Notifly provides easy-to-use functions for sending notifications to users via email, SMS, or push notifications, streamlining communication in your applications",
+    iconUrl: benefitIcon3,
+    snippet: "npm i notify-quickstart@1.0.0",
+    redirect: "#",
+    imageUrl:
+      "https://res.cloudinary.com/duozomapm/image/upload/v1741177645/codeEaseXLogo_j7ojvi.png",
+    url: "https://res.cloudinary.com/duozomapm/image/upload/v1743089426/notifyImage_c9wwbt.png",
     upcoming: "coming",
   },
 ];
