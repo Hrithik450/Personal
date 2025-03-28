@@ -107,7 +107,7 @@ const Benefits = () => {
                       href={item.redirect}
                       className="hover:text-blue-400 transition-colors duration-300 flex items-center"
                     >
-                      Explore more
+                      View Docs
                       <Arrow className="ml-1 text-blue-400 hover:text-purple-500 transition-colors duration-300" />
                     </a>
                   </p>
