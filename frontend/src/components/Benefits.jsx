@@ -20,10 +20,7 @@ const Benefits = () => {
             <div
               className="block relative p-0.5 bg-no-repeat bg-[length:100%_100%] md:max-w-[24rem] transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group overflow-hidden"
               style={{
-                backgroundImage: `linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899), url(${item.backgroundUrl})`,
-                backgroundOrigin: "border-box",
-                backgroundClip: "padding-box, border-box",
-                border: "1px solid transparent",
+                backgroundImage: `linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899)`,
               }}
               key={item.id}
             >

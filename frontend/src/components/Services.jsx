@@ -79,7 +79,7 @@ const Services = () => {
             {testimonials.map((testimonial) => (
               <div
                 key={testimonial.id}
-                className="flex-shrink-0 w-full sm:w-2/3 md:w-1/2 lg:w-1/3 px-4 snap-center"
+                className="flex-shrink-0 w-full sm:w-2/3 md:w-1/2 lg:w-1/3 md:px-4 snap-center"
               >
                 <div className="relative group h-full">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl opacity-20 blur-md group-hover:opacity-30 transition-all duration-500" />

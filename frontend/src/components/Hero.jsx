@@ -68,8 +68,6 @@ const Hero = () => {
           <QuantumOrbitParticles />
         </div>
       </div>
-
-      <HolographicEdge />
     </Section>
   );
 };
