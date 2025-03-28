@@ -38,9 +38,7 @@ const Header = ({ toggleAccount, toggleAuthen }) => {
   return (
     <div
       className={`fixed top-0 left-0 w-full z-50  border-b border-n-6 lg:backdrop-blur-sm ${
-        openNavigation
-          ? ""
-          : "bg-gradient-to-br from-indigo-900/20 to-purple-900/10 backdrop-blur-sm"
+        openNavigation ? "" : "backdrop-blur-sm"
       }`}
     >
       <div className="flex items-center px-5 lg:px-7.5 xl:px-10 max-lg:py-4">

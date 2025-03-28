@@ -1,6 +1,7 @@
 import { check } from "../assets";
 import { collabApps, collabContent } from "../constants";
 import Button from "./Button";
+import { HolographicEdge } from "./design/Hero";
 import Section from "./Section";
 
 const Collaboration = () => {
@@ -121,6 +122,8 @@ const Collaboration = () => {
 
       <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-cyan-500 rounded-full filter blur-3xl opacity-10 pointer-events-none" />
       <div className="absolute -top-20 -right-20 w-96 h-96 bg-purple-500 rounded-full filter blur-3xl opacity-10 pointer-events-none" />
+
+      <HolographicEdge />
     </Section>
   );
 };
