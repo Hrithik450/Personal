@@ -54,6 +54,7 @@ const PaymentDetailsTab = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const subscription = searchParams.get("subscription");
+  const auth = localStorage.getItem("isAuthenticated") === "true";
 
   const plan = searchParams.get("duration") || "plan1";
   const paymentMethod = searchParams.get("paymentMethod") || "card";
@@ -126,6 +127,18 @@ const PaymentDetailsTab = () => {
   };
 
   const handleSubmit = async () => {
+    if (!auth) {
+      setSearchParams({
+        authpage: "open",
+        auth: "login",
+      });
+
+      return toast.error(
+        "Please login before proceeding to payment",
+        alertObject
+      );
+    }
+
     if (paymentMethod !== "card") {
       return openCryptoPay();
     }

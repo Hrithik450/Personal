@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const subscriptions = {
@@ -19,7 +19,7 @@ const durationDiscounts = {
   24: 10,
 };
 
-const CryptoPayment = ({ toggleCrypto }) => {
+const CryptoPayment = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const plan = searchParams.get("duration") || "plan1";
@@ -27,6 +27,15 @@ const CryptoPayment = ({ toggleCrypto }) => {
   const subscription = searchParams.get("subscription") || "Pro";
   const selectedCrypto = searchParams.get("crypto") || "XLM";
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!localStorage.getItem("isAuthenticated")) {
+      setSearchParams({
+        authpage: "open",
+        auth: "login",
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (!searchParams.get("crypto")) {
