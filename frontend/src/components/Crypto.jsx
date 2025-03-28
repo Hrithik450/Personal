@@ -32,7 +32,7 @@ const CryptoPayment = ({ toggleCrypto }) => {
     if (!searchParams.get("crypto")) {
       const newParams = new URLSearchParams(searchParams);
 
-      if (!searchParams.get("crypto")) newParams.set("crypto", crypto);
+      if (!searchParams.get("crypto")) newParams.set("crypto", selectedCrypto);
 
       navigate(`?${newParams.toString()}`, { replace: true });
     }
