@@ -1,7 +1,7 @@
 import { curve } from "../assets";
 import Button from "./Button";
 import Section from "./Section";
-import { BackgroundCircles, BottomLine } from "./design/Hero";
+import { HolographicEdge, QuantumOrbitParticles } from "./design/Hero";
 import { useRef } from "react";
 import HeadCard from "./design/HeadCard";
 
@@ -65,11 +65,11 @@ const Hero = () => {
         </div>
 
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[23rem] md:max-w-5xl xl:mb-24 pointer-events-none -z-10">
-          <BackgroundCircles />
+          <QuantumOrbitParticles />
         </div>
       </div>
 
-      <BottomLine />
+      <HolographicEdge />
     </Section>
   );
 };

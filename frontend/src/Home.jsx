@@ -57,7 +57,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="pt-[4.75rem] lg:pt-[5.25rem] overflow-hidden">
+      <div className="pt-[4.75rem] lg:pt-[5.25rem] overflow-hidden bg-gradient-to-br from-indigo-900/20 to-purple-900/10">
         {modalState.isCryptoPay && (
           <CryptoQr toggleCrypto={() => toggleParam("cryptoPayOpen")} />
         )}
@@ -88,8 +88,8 @@ const Home = () => {
         <Hero />
         <Benefits />
         <Pricing />
-        <Collaboration />
         <Services />
+        <Collaboration />
         <Footer />
       </div>
       <ButtonGradient />
