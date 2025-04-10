@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { generateTokenandSetcookie } from "../utils/generateToken.js";
 
 export const isAuthenticated = async (req, res, next) => {
   const token = await (req.cookies?.CODEEASEX ||
@@ -24,12 +23,4 @@ export const isAuthenticated = async (req, res, next) => {
       user: null,
     });
   }
-};
-
-export const refreshToken = async (req, res, next) => {
-  req.headers[CODEEASEX] = "";
-  res.clearCookie(CODEEASEX);
-
-  generateTokenandSetcookie(res, req.user.userID, req.user.username);
-  next();
 };

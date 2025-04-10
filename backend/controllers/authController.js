@@ -9,7 +9,7 @@ import path from "path";
 import ejs from "ejs";
 import db from "../database/firebase.js";
 import createUser from "../models/User.js";
-import { DateTime, Duration } from "luxon";
+import { DateTime } from "luxon";
 import {
   collection,
   query,
@@ -19,7 +19,6 @@ import {
   updateDoc,
   getDoc,
   setDoc,
-  Timestamp,
 } from "firebase/firestore";
 
 const usersRef = collection(db, "CodeEaseXUsers");

@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  FaGoogle,
-  FaFacebookF,
-  FaEnvelope,
-  FaLock,
-  FaEye,
-  FaEyeSlash,
-  FaUser,
-} from "react-icons/fa";
+import { FaGoogle, FaShieldAlt, FaRocket, FaUserLock } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 import { login, Oauth, signup } from "../store/slices/auth/authThunks";
-import DotSpinner from "./design/Spinner";
+import { FcGoogle } from "react-icons/fc";
 
 const Auth = ({ toggleAuthen, toggleForget }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -84,134 +76,89 @@ const Auth = ({ toggleAuthen, toggleForget }) => {
   };
 
   return (
-    <div className="fixed top-0 right-0 z-[101] min-h-screen max-h-screen max-w-[450px] w-full overflow-hidden overflow-y-auto p-5 bg-gradient-to-br from-[#2b4162] to-[#12100e] border border-gray-700 shadow-2xl text-white animate-slideIn max-md:max-w-full max-sm:max-w-full sm:w-full sm:p-6">
+    <div className="fixed top-0 right-0 z-[101] min-h-screen max-h-screen max-w-[450px] w-full overflow-hidden overflow-y-auto p-5 bg-gradient-to-br from-[#12100e] to-[#2b4162] border-l border-gray-700 shadow-2xl text-white animate-slideIn max-md:max-w-full max-sm:max-w-full sm:w-full sm:p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-          Account
+        <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          Welcome to CodeEaseX
         </h2>
         <button
           onClick={toggleAuthen}
-          className="text-white text-2xl cursor-pointer hover:text-red-500 transition-colors duration-300"
+          className="text-white text-2xl cursor-pointer hover:text-red-400 transition-all duration-200 hover:rotate-90"
         >
           ✕
         </button>
       </div>
 
-      <div className="text-white mt-20 flex items-center justify-center">
-        <form
-          onSubmit={handleSubmit}
-          className="bg-gradient-to-br from-[#1a2a6c] to-[#b21f1f] p-8 rounded-lg shadow-2xl w-full max-w-sm transform transition-all duration-300 hover:scale-105"
-        >
-          <h2 className="text-3xl font-semibold text-center mb-6 bg-gradient-to-r from-[#ff7e5f] to-[#feb47b] bg-clip-text text-transparent">
-            {authType === "login" ? "Welcome Back" : "Create Account"}
-          </h2>
-
-          <div className="flex space-x-4 mb-4">
-            <a
-              type="button"
-              href={`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/google`}
-              className="flex items-center justify-center w-full bg-gradient-to-r from-[#3b82f6] to-[#2563eb] hover:from-[#2563eb] hover:to-[#1e4bbd] py-2 rounded-md transition-all duration-300 transform hover:scale-105"
-            >
-              <FaGoogle className="mr-2" /> Google
-            </a>
-          </div>
-
-          <div className="flex items-center justify-center mb-4">
-            <div className="w-full border-b border-gray-600"></div>
-            <span className="mx-4 text-gray-400">or</span>
-            <div className="w-full border-b border-gray-600"></div>
-          </div>
-
-          {authType === "signup" && (
-            <div className="relative mb-4">
-              <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                required
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                placeholder="Username"
-                className="w-full pl-10 pr-3 py-2 rounded-md bg-[#2d2a29] border border-gray-600 focus:outline-none focus:border-[#ff7e5f]"
-              />
+      <div className="flex flex-col items-center justify-center mt-15">
+        <div className="text-center max-w-md w-full">
+          <div className="flex justify-center mb-8 animate-bounce hover:animate-none transition-all duration-300 hover:scale-110">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#FBBC05] blur opacity-20 group-hover:opacity-30 transition-opacity duration-300 rounded-full"></div>
+              <FcGoogle className="text-5xl relative z-10 transform transition-all duration-300 group-hover:rotate-[360deg]" />
+              <div className="absolute inset-0 border-2 border-white/10 rounded-full pointer-events-none animate-pulse"></div>
             </div>
-          )}
-
-          <div className="relative mb-4">
-            <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input
-              required
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Email Address"
-              className="w-full pl-10 pr-3 py-2 rounded-md bg-[#2d2a29] border border-gray-600 focus:outline-none focus:border-[#ff7e5f]"
-            />
           </div>
 
-          <div className="relative mb-4">
-            <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input
-              required
-              type={passwordVisible ? "text" : "password"}
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Password"
-              className="w-full pl-10 pr-10 py-2 rounded-md bg-[#2d2a29] border border-gray-600 focus:outline-none focus:border-[#ff7e5f]"
-            />
-            <button
-              type="button"
-              onClick={() => setPasswordVisible(!passwordVisible)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#ff7e5f] transition-colors duration-300"
-            >
-              {passwordVisible ? <FaEyeSlash /> : <FaEye />}
-            </button>
-          </div>
+          <h3 className="text-2xl font-semibold mb-4 bg-gradient-to-r from-blue-300 to-purple-400 bg-clip-text text-transparent">
+            Continue with Google
+          </h3>
 
-          {authType === "login" && (
-            <div className="text-right mb-6">
-              <a
-                type="button"
-                onClick={toggleForget}
-                className="text-[#ff7e5f] hover:underline cursor-pointer"
-              >
-                Forget Password?
-              </a>
-            </div>
-          )}
+          <p className="text-gray-400 mb-8">
+            One-click access to your SecurePay AI dashboard. We'll never post
+            without your permission.
+          </p>
 
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-[#ff7e5f] to-[#feb47b] hover:from-[#ff6f4f] hover:to-[#fea46b] py-3 rounded-md text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+          <a
+            href={`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/google`}
+            className="flex items-center justify-center w-full bg-white text-gray-800 hover:bg-gray-100 py-3 px-6 rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] active:scale-95 border border-gray-200"
           >
-            {authLoading ? (
-              <DotSpinner color={"white"} />
-            ) : authType === "login" ? (
-              "Login"
-            ) : (
-              "Sign Up"
-            )}
-          </button>
+            <FcGoogle className="text-[#4285F4] mr-3 text-xl" />
+            <span className="font-medium">Sign in with Google</span>
+          </a>
 
-          <div className="text-center mt-6">
-            <span className="text-gray-400">
-              {authType === "login"
-                ? "Don't have an account?"
-                : "Already have an account?"}
-            </span>
-            <button
-              type="button"
-              onClick={() =>
-                toggleAuth(authType === "login" ? "signup" : "login")
-              }
-              className="text-[#ff7e5f] ml-1 hover:underline"
-            >
-              {authType === "login" ? "Sign up" : "Login"}
-            </button>
+          <div className="mt-12 space-y-4">
+            <div className="flex items-start">
+              <div className="bg-blue-500/10 p-1.5 rounded-full mr-3">
+                <FaShieldAlt className="text-blue-400" />
+              </div>
+              <div>
+                <h4 className="font-medium">Secure Authentication</h4>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <div className="bg-purple-500/10 p-1.5 rounded-full mr-3">
+                <FaRocket className="text-purple-400" />
+              </div>
+              <div>
+                <h4 className="font-medium">Instant Access</h4>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <div className="bg-green-500/10 p-1.5 rounded-full mr-3">
+                <FaUserLock className="text-green-400" />
+              </div>
+              <div>
+                <h4 className="font-medium">Privacy Protected</h4>
+              </div>
+            </div>
           </div>
-        </form>
+        </div>
+      </div>
+
+      <div className="mt-auto pt-8 text-center text-xs text-gray-500">
+        By continuing, you agree to our{" "}
+        <a
+          href="/terms-and-conditions"
+          className="text-blue-400 hover:underline"
+        >
+          Terms
+        </a>{" "}
+        and{" "}
+        <a href="/privacy-policy" className="text-blue-400 hover:underline">
+          Privacy Policy
+        </a>
       </div>
     </div>
   );

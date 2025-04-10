@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { DateTime } from "luxon";
 
 export const generateTokenandSetcookie = (res, userID, username) => {
   const token = jwt.sign(
@@ -15,7 +16,7 @@ export const generateTokenandSetcookie = (res, userID, username) => {
     secure: true,
     sameSite: "None",
     path: "/",
-    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    expires: new Date(DateTime.now() + 7 * 24 * 60 * 60 * 1000),
   });
 
   return token;
