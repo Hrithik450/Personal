@@ -81,7 +81,7 @@ const PrivacyPolicy = () => {
       <ul className="list-disc list-inside mt-2">
         <li>Email: codeeasepackages@gmail.com</li>
         <li>Phone: +91-7483229386.</li>
-        <li>Address:#21, Peenya 2nd Stage, Bangalore - 560058, Karnataka</li>
+        <li>Address: Bangalore, Karnataka</li>
       </ul>
 
       <footer className="text-center text-sm text-gray-600 mt-6">
