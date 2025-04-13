@@ -44,11 +44,16 @@ def send_mail():
 @app.route('/embed', methods=['POST'])
 def embed_text():
     data = request.json
-    text = data.get("text")
+    text = data["text"]
+
     if not text:
         return jsonify({"error": "Text is missing"}), 400
-    embedding = model.encode(text).tolist()
-    return jsonify({"embedding": embedding})
+    
+    try:
+        embedding = model.encode(text).tolist()
+        return jsonify({"embedding": embedding})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
