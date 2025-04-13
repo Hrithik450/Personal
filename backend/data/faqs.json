@@ -1,0 +1,91 @@
+{
+  "faqs": [
+    {
+      "question": "What exactly is an AI agent?",
+      "answer": "An AI agent is a software entity that can perceive its environment through sensors and act upon that environment through effectors. It is designed to achieve goals and can exhibit intelligent behavior.",
+      "related_questions": [
+        "How do these AI agents work?",
+        "What are the different types of AI agents you have built?"
+      ],
+      "usage_count": 0
+    },
+    {
+      "question": "How do these AI agents work?",
+      "answer": "Our AI agents typically work by processing information using machine learning models. They analyze input, identify patterns, and generate responses or actions based on their training.",
+      "related_questions": [
+        "What exactly is an AI agent?",
+        "What data are these agents trained on? Is my data secure?"
+      ],
+      "usage_count": 0
+    },
+    {
+      "question": "What are the different types of AI agents you have built?",
+      "answer": "We have built various types of AI agents, including chatbots for customer support, content generation tools, and data analysis assistants.",
+      "related_questions": [
+        "What problems do these AI agents solve?",
+        "What are the key features and functionalities of each agent?"
+      ],
+      "usage_count": 0
+    },
+    {
+      "question": "What problems do these AI agents solve?",
+      "answer": "Our AI agents are designed to solve problems such as automating repetitive tasks, providing instant customer support, generating creative content, and extracting insights from large datasets.",
+      "related_questions": [
+        "What are the key features and functionalities of each agent?",
+        "What are the limitations of these AI agents?"
+      ],
+      "usage_count": 0
+    },
+    {
+      "question": "What are the key features and functionalities of each agent?",
+      "answer": "The key features and functionalities vary depending on the specific agent. For example, our chatbot offers natural language understanding and multi-turn conversations, while the content generator can produce different creative text formats.",
+      "related_questions": [
+        "What are the different types of AI agents you have built?",
+        "What are the limitations of these AI agents?"
+      ],
+      "usage_count": 0
+    },
+    {
+      "question": "What are the limitations of these AI agents?",
+      "answer": "Like all AI systems, our agents have limitations. They may sometimes struggle with nuanced language, require specific training data, and may not always be able to handle unforeseen situations.",
+      "related_questions": [
+        "Are these agents constantly learning and improving?",
+        "How accurate and reliable are the responses from these agents?"
+      ],
+      "usage_count": 0
+    },
+    {
+      "question": "Are these agents constantly learning and improving?",
+      "answer": "Yes, many of our agents are designed to continuously learn and improve through ongoing training and user interactions. This allows them to become more accurate and effective over time.",
+      "related_questions": [
+        "What data are these agents trained on? Is my data secure?",
+        "How accurate and reliable are the responses from these agents?"
+      ],
+      "usage_count": 0
+    },
+    {
+      "question": "What data are these agents trained on? Is my data secure?",
+      "answer": "Our agents are trained on a variety of publicly available and curated datasets. We take data security very seriously and ensure that user interactions are handled with appropriate privacy measures.",
+      "related_questions": [
+        "How do these AI agents work?",
+        "Are these agents constantly learning and improving?"
+      ],
+      "usage_count": 0
+    },
+    {
+      "question": "How accurate and reliable are the responses from these agents?",
+      "answer": "We strive for high accuracy and reliability. However, as AI models, their responses are based on probabilities and the data they were trained on. It's always good to critically evaluate the information provided.",
+      "related_questions": [
+        "What are the limitations of these AI agents?",
+        "Are these agents constantly learning and improving?"
+      ],
+      "usage_count": 0
+    },
+    {
+      "question": "Can I customize or integrate these agents into my own systems? (If applicable)",
+      "answer": "Yes, depending on the specific agent and your needs, we offer options for customization and integration through APIs and other methods. Please contact our sales team for more details.",
+      "related_questions": [],
+      "usage_count": 0
+    }
+  ]
+}
