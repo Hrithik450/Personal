@@ -1,5 +1,5 @@
 import { createRequire } from "module";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import OpenAI from "openai";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import path from "path";
@@ -12,9 +12,8 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, "../config/config.env") });
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const embeddingModel = genAI.getGenerativeModel({
-  model: "gemini-embedding-exp-03-07",
+const openai = new OpenAI({
+  apiKey: process.env.GPT_API_KEY,
 });
 
 export const Getfaqsdata = async (req, res) => {
@@ -25,8 +24,12 @@ export const getEmbeddings = async (req, res) => {
   const { text } = req.body;
 
   try {
-    const result = await embeddingModel.embedContent(text);
-    const embedding = result?.embedding?.values;
+    const embedding = await openai.embeddings.create({
+      model: "text-embedding-3-small",
+      input: text,
+      encoding_format: "float",
+    });
+
     return embedding || null;
   } catch (error) {
     console.error("Error generating embeddings:", error);
