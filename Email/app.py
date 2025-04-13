@@ -15,31 +15,43 @@ model = SentenceTransformer('all-MPNet-base-v2')
 @app.route('/send-email', methods=['POST'])
 def send_mail():
     data = request.json
-    recipient_email = data['email']
-    subject = data['subject']
-    message = data['message']
+    text = data["text"]
 
-    sender_email = os.getenv('EMAIL')
-    password = os.getenv('PASSWORD')
-  
-    try:    
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(sender_email, password)
-
-        msg = MIMEMultipart()
-        msg['From'] = f'Team CodeEase <{sender_email}>'
-        msg['To'] = recipient_email
-        msg['Subject'] = subject
-        msg.attach(MIMEText(message, 'html'))
-
-        server.send_message(msg)
-        server.quit()
-
-        return jsonify({"status": "success", "message": "Email sent successfully"}), 200
+    if not text:
+        return jsonify({"error": "Text is missing"}), 400
     
+    try:
+        embedding = model.encode(text).tolist()
+        return jsonify({"embedding": embedding})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+    # data = request.json
+    # recipient_email = data['email']
+    # subject = data['subject']
+    # message = data['message']
+
+    # sender_email = os.getenv('EMAIL')
+    # password = os.getenv('PASSWORD')
+  
+    # try:    
+    #     server = smtplib.SMTP('smtp.gmail.com', 587)
+    #     server.starttls()
+    #     server.login(sender_email, password)
+
+    #     msg = MIMEMultipart()
+    #     msg['From'] = f'Team CodeEase <{sender_email}>'
+    #     msg['To'] = recipient_email
+    #     msg['Subject'] = subject
+    #     msg.attach(MIMEText(message, 'html'))
+
+    #     server.send_message(msg)
+    #     server.quit()
+
+    #     return jsonify({"status": "success", "message": "Email sent successfully"}), 200
+    
+    # except Exception as e:
+    #     return jsonify({"status": "error", "message": str(e)}), 500
+
 
 @app.route('/get-embed', methods=['POST'])
 def embed_text():
