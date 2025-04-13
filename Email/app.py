@@ -41,7 +41,7 @@ def send_mail():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-@app.route('/embed', methods=['POST'])
+@app.route('/get-embed', methods=['POST'])
 def embed_text():
     data = request.json
     text = data["text"]
