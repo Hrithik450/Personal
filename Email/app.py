@@ -3,11 +3,14 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from dotenv import load_dotenv
+from sentence_transformers import SentenceTransformer
 import os
 
 load_dotenv()
 
 app = Flask(__name__)
+
+model = SentenceTransformer('all-MPNet-base-v2')
 
 @app.route('/send-email', methods=['POST'])
 def send_mail():
@@ -33,10 +36,19 @@ def send_mail():
         server.send_message(msg)
         server.quit()
 
-        return jsonify({"status": "success", "message" : "Email sent successfully"}), 200
+        return jsonify({"status": "success", "message": "Email sent successfully"}), 200
     
     except Exception as e:
-        return jsonify({"status" : "error", "message" : str(e)}), 500
-    
-if __name__=='__main__':
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/embed', methods=['POST'])
+def embed_text():
+    data = request.json
+    text = data.get("text")
+    if not text:
+        return jsonify({"error": "Text is missing"}), 400
+    embedding = model.encode(text).tolist()
+    return jsonify({"embedding": embedding})
+
+if __name__ == '__main__':
     app.run(debug=True)
