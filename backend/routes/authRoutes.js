@@ -19,7 +19,7 @@ const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config({ path: path.resolve(__dirname, "config/config.env") });
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 router.post("/signup", signup);
 router.post("/login", login);

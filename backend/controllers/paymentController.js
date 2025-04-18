@@ -11,7 +11,7 @@ import db from "../database/firebase.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.resolve(__dirname, "../config/config.env") });
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const instance = new Razorpay({
   key_id: process.env.RAZORPAY_API_KEY,

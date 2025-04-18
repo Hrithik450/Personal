@@ -19,7 +19,7 @@ import { monitor } from "./monitor.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config({ path: path.resolve(__dirname, "config/config.env") });
+dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 const app = express();
 const FRONTEND_URL = process.env.FRONTEND_URL;

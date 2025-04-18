@@ -22,7 +22,7 @@ import { getLiveDate } from "./authController.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config({ path: path.resolve(__dirname, "../config/config.env") });
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const BINANCE_SECRET_KEY = process.env.BINANCE_SECRET_KEY;
 const BINANCE_API_KEY = process.env.BINANCE_API_KEY;
