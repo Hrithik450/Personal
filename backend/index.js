@@ -11,7 +11,6 @@ import authRoutes from "./routes/authRoutes.js";
 import scriptRoutes from "./routes/scriptRoutes.js";
 import webhookRoutes from "./routes/webhookRoutes.js";
 import feedbackRoutes from "./routes/feedbackRoutes.js";
-import errorRoutes from "./routes/errorRoutes.js";
 import { googleAuth } from "./controllers/authController.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { monitor } from "./monitor.js";
@@ -53,7 +52,6 @@ app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/scripts", scriptRoutes);
 app.use("/api/v1/feedback", feedbackRoutes);
-app.use("/api/v1/analyze", errorRoutes);
 app.use("/webhook", webhookRoutes);
 app.use(errorHandler);
 
