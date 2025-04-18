@@ -71,16 +71,11 @@ export const getZipFile = async (req, res, next) => {
         .json({ error: "project directory is required in request body" });
     }
 
-    const targetDir = path.resolve(
-      __dirname,
-      "../config/scripts",
-      project,
-      "bin"
-    );
+    const targetDir = path.resolve(__dirname, "../scripts", project, "bin");
 
     const outputZipPath = path.resolve(
       __dirname,
-      `../config/scripts/${project}`,
+      `../scripts/${project}`,
       "bin.zip"
     );
 
