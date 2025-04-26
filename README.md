@@ -9,9 +9,9 @@ We offer production-ready starter kits, e-commerce templates, and payment gatewa
 
 Popular packages include:
 
-mern-quickstart — Instantly spin up a MERN stack project.
-ecom-quickstart — Build scalable E-commerce apps faster.
-Payment Gateway Packages — Easy integrations with Stripe, Razorpay, and more.
+- **mern-quickstart-** Instantly spin up a MERN stack project.
+- **ecom-quickstart-** Build scalable E-commerce apps faster..
+- **Payment Gateway Packages-** Easy integrations with Stripe, Razorpay, and more.
 
 🚀 **Why Choose CodeEaseX?**
 
